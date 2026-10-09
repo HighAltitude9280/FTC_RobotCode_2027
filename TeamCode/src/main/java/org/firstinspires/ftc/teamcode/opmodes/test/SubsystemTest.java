@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
-@TeleOp(name = "Mecanum Intake Test")
-public class MecanumIntakeTest extends LinearOpMode {
+@TeleOp(name = "Subsystem Test")
+public class SubsystemTest extends LinearOpMode {
 
     @Override
     public void runOpMode() {

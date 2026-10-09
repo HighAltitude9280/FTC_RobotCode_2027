@@ -35,7 +35,13 @@ public class RobotContainer {
                                 .DRIVETRAIN
                                 .IMU_NAME
                 );
-        IntakeRollersIO intakeRollersIO = new IntakeRollersIO(hardwareMap, LowAltitudeConstants.INTAKE.INTAKE_NAME);
+        IntakeRollersIO intakeRollersIO =
+                new IntakeRollersIO(
+                        hardwareMap,
+                        LowAltitudeConstants
+                                .INTAKE
+                                .INTAKE_NAME);
+
         drivetrain =
                 new Drivetrain(drivetrainIO);
         intake =

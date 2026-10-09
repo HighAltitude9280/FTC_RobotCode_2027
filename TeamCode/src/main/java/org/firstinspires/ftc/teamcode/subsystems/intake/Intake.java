@@ -2,11 +2,12 @@ package org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.hardware.rollers.IntakeRollersIO;
+import org.firstinspires.ftc.teamcode.hardware.rollers.RollersIO;
 
 public class Intake {
-    private final IntakeRollersIO io;
+    private final RollersIO io;
 
-    public Intake(IntakeRollersIO io) {
+    public Intake(RollersIO io) {
         this.io = io;
     }
 

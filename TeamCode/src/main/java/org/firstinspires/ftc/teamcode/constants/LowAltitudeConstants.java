@@ -32,5 +32,14 @@ public final class LowAltitudeConstants {
         public static final String INTAKE_NAME = "intake";
         public static final double INTAKE_IN_POWER = 0.5;
         public static final double INTAKE_OUT_POWER = -0.5;
+
+        public static final DcMotor.ZeroPowerBehavior INTAKE_ZERO_POWER_BEHAVIOR =
+                DcMotor.ZeroPowerBehavior.BRAKE;
+        public static final DcMotor.RunMode INTAKE_RUN_MODE =
+                DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+        public static final DcMotorSimple.Direction INTAKE_DIRECTION =
+                DcMotorSimple.Direction.FORWARD;
+
+        private INTAKE() {}
     }
 }
