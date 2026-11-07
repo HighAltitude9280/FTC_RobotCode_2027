@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode.hardware.rollers;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 
-public class IntakeRollersIO implements RollersIO {
+public class MotorRollerIO implements RollerIO {
     private final DcMotorEx intakeRollerMotor;
 
-    public IntakeRollersIO(HardwareMap hardwareMap, String intakeRollerMotorName) {
+    public MotorRollerIO(HardwareMap hardwareMap, String intakeRollerMotorName) {
         intakeRollerMotor = hardwareMap.get(DcMotorEx.class, intakeRollerMotorName);
 
         intakeRollerMotor.setDirection(
