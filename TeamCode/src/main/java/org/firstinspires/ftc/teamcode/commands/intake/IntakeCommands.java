@@ -14,7 +14,7 @@ public final class IntakeCommands {
                 .requiring(intake);
     }
 
-    public  static  Command intakeOut(Intake intake) {
+    public static Command intakeOut(Intake intake) {
         return Command.build()
                 .setStart(intake::intakeOut)
                 .setEnd(endCondition -> intake.stop())

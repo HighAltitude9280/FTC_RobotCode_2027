@@ -21,7 +21,8 @@ public class TwoWheelTuner extends Procedure {
     @Override
     public void run() throws InterruptedException {
         Inputs setup = inputs("Setup", "Set encoder, IMU, and Control Hub orientation");
-        Inputs.Field<String> forwardPodName = setup.s("Forward Encoder Motor Name").withDefault("lf");
+        Inputs.Field<String> forwardPodName =
+                setup.s("Forward Encoder Motor Name").withDefault("lf");
         Inputs.Field<String> strafePodName = setup.s("Strafe Encoder Motor Name").withDefault("rr");
         Inputs.Field<String> imuName = setup.s("IMU HardwareMap Name").withDefault("imu");
         Inputs.Field<RevHubOrientationOnRobot.LogoFacingDirection> logoDirection =
@@ -32,24 +33,33 @@ public class TwoWheelTuner extends Procedure {
                         .withDefault(RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD);
         awaitInputs(setup);
 
-        Inputs resolution = inputs("Encoder Resolution Identification", "Set the exact distance you will push the robot in inches");
+        Inputs resolution =
+                inputs(
+                        "Encoder Resolution Identification",
+                        "Set the exact distance you will push the robot in inches");
         Inputs.Field<Double> distance = resolution.d("Distance").withDefault(48.0);
         awaitInputs(resolution);
 
-        TwoWheelSetup values = new TwoWheelSetup(
-                forwardPodName.get(),
-                strafePodName.get(),
-                imuName.get(),
-                logoDirection.get(),
-                usbDirection.get()
-        );
+        TwoWheelSetup values =
+                new TwoWheelSetup(
+                        forwardPodName.get(),
+                        strafePodName.get(),
+                        imuName.get(),
+                        logoDirection.get(),
+                        usbDirection.get());
 
-        Double forwardTicksPerInchResult = runOpMode(new TwoWheelForwardResolution(values, distance.get()));
-        Double strafeTicksPerInchResult = runOpMode(new TwoWheelStrafeResolution(values, distance.get()));
+        Double forwardTicksPerInchResult =
+                runOpMode(new TwoWheelForwardResolution(values, distance.get()));
+        Double strafeTicksPerInchResult =
+                runOpMode(new TwoWheelStrafeResolution(values, distance.get()));
 
-        if (forwardTicksPerInchResult == null || strafeTicksPerInchResult == null
-                || forwardTicksPerInchResult == 0.0 || strafeTicksPerInchResult == 0.0) {
-            abort("Encoder resolution measurement was zero. Complete both pushes before pressing Stop.");
+        if (forwardTicksPerInchResult == null
+                || strafeTicksPerInchResult == null
+                || forwardTicksPerInchResult == 0.0
+                || strafeTicksPerInchResult == 0.0) {
+            abort(
+                    "Encoder resolution measurement was zero. Complete both pushes before pressing"
+                            + " Stop.");
             return;
         }
 
@@ -59,23 +69,24 @@ public class TwoWheelTuner extends Procedure {
         double forwardTicksToInches = 1.0 / forwardTicksPerInch;
         double strafeTicksToInches = 1.0 / strafeTicksPerInch;
 
-        boolean forwardPodReversed = runOpMode(
-                new TwoWheelForwardDirection(values, forwardTicksToInches, strafeTicksToInches)
-        );
+        boolean forwardPodReversed =
+                runOpMode(
+                        new TwoWheelForwardDirection(
+                                values, forwardTicksToInches, strafeTicksToInches));
 
-        boolean strafePodReversed = runOpMode(
-                new TwoWheelStrafeDirection(values, forwardTicksToInches, strafeTicksToInches)
-        );
+        boolean strafePodReversed =
+                runOpMode(
+                        new TwoWheelStrafeDirection(
+                                values, forwardTicksToInches, strafeTicksToInches));
 
-        List<Double> offsets = runOpMode(
-                new TwoWheelOffsets(
-                        values,
-                        forwardTicksToInches,
-                        strafeTicksToInches,
-                        forwardPodReversed,
-                        strafePodReversed
-                )
-        );
+        List<Double> offsets =
+                runOpMode(
+                        new TwoWheelOffsets(
+                                values,
+                                forwardTicksToInches,
+                                strafeTicksToInches,
+                                forwardPodReversed,
+                                strafePodReversed));
 
         result("xPodName", values.forwardPodName);
         result("yPodName", values.strafePodName);
@@ -91,27 +102,45 @@ public class TwoWheelTuner extends Procedure {
         result("xPodOffset", offsets.get(0));
         result("yPodOffset", offsets.get(1));
 
-        code(Language.JAVA,
-                "public static TwoWheelConfig localizerConfig = new TwoWheelConfig(c -> {\n" +
-                        "    c.xPodName.set(\"" + values.forwardPodName + "\");\n" +
-                        "    c.yPodName.set(\"" + values.strafePodName + "\");\n" +
-                        "    c.imuName.set(\"" + values.imuName + "\");\n" +
-                        "    c.xPodOffset.set(" + offsets.get(0) + ");\n" +
-                        "    c.yPodOffset.set(" + offsets.get(1) + ");\n" +
-                        "    c.forwardTicksToInches.set(" + forwardTicksToInches + ");\n" +
-                        "    c.strafeTicksToInches.set(" + strafeTicksToInches + ");\n" +
-                        "    c.xPodDirection.set(" +
-                        (forwardPodReversed ? "Encoder.REVERSE" : "Encoder.FORWARD") +
-                        ");\n" +
-                        "    c.yPodDirection.set(" +
-                        (strafePodReversed ? "Encoder.REVERSE" : "Encoder.FORWARD") +
-                        ");\n" +
-                        "    c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(\n" +
-                        "            RevHubOrientationOnRobot.LogoFacingDirection." + values.logoDirection.name() + ",\n" +
-                        "            RevHubOrientationOnRobot.UsbFacingDirection." + values.usbDirection.name() + "\n" +
-                        "    )));\n" +
-                        "});"
-        );
+        code(
+                Language.JAVA,
+                "public static TwoWheelConfig localizerConfig = new TwoWheelConfig(c -> {\n"
+                        + "    c.xPodName.set(\""
+                        + values.forwardPodName
+                        + "\");\n"
+                        + "    c.yPodName.set(\""
+                        + values.strafePodName
+                        + "\");\n"
+                        + "    c.imuName.set(\""
+                        + values.imuName
+                        + "\");\n"
+                        + "    c.xPodOffset.set("
+                        + offsets.get(0)
+                        + ");\n"
+                        + "    c.yPodOffset.set("
+                        + offsets.get(1)
+                        + ");\n"
+                        + "    c.forwardTicksToInches.set("
+                        + forwardTicksToInches
+                        + ");\n"
+                        + "    c.strafeTicksToInches.set("
+                        + strafeTicksToInches
+                        + ");\n"
+                        + "    c.xPodDirection.set("
+                        + (forwardPodReversed ? "Encoder.REVERSE" : "Encoder.FORWARD")
+                        + ");\n"
+                        + "    c.yPodDirection.set("
+                        + (strafePodReversed ? "Encoder.REVERSE" : "Encoder.FORWARD")
+                        + ");\n"
+                        + "    c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(\n"
+                        + "            RevHubOrientationOnRobot.LogoFacingDirection."
+                        + values.logoDirection.name()
+                        + ",\n"
+                        + "            RevHubOrientationOnRobot.UsbFacingDirection."
+                        + values.usbDirection.name()
+                        + "\n"
+                        + "    )));\n"
+                        + "});");
     }
 
     static TwoWheelConfig config(
@@ -121,20 +150,23 @@ public class TwoWheelTuner extends Procedure {
             double xPodDirection,
             double yPodDirection,
             double xPodOffset,
-            double yPodOffset
-    ) {
-        return new TwoWheelConfig(c -> {
-            c.xPodName.set(values.forwardPodName);
-            c.yPodName.set(values.strafePodName);
-            c.imuName.set(values.imuName);
-            c.xPodOffset.set(xPodOffset);
-            c.yPodOffset.set(yPodOffset);
-            c.forwardTicksToInches.set(forwardTicksToInches);
-            c.strafeTicksToInches.set(strafeTicksToInches);
-            c.xPodDirection.set(xPodDirection);
-            c.yPodDirection.set(yPodDirection);
-            c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(values.logoDirection, values.usbDirection)));
-        });
+            double yPodOffset) {
+        return new TwoWheelConfig(
+                c -> {
+                    c.xPodName.set(values.forwardPodName);
+                    c.yPodName.set(values.strafePodName);
+                    c.imuName.set(values.imuName);
+                    c.xPodOffset.set(xPodOffset);
+                    c.yPodOffset.set(yPodOffset);
+                    c.forwardTicksToInches.set(forwardTicksToInches);
+                    c.strafeTicksToInches.set(strafeTicksToInches);
+                    c.xPodDirection.set(xPodDirection);
+                    c.yPodDirection.set(yPodDirection);
+                    c.imu.set(
+                            new RevHubIMU(
+                                    new RevHubOrientationOnRobot(
+                                            values.logoDirection, values.usbDirection)));
+                });
     }
 }
 
@@ -151,8 +183,7 @@ class TwoWheelSetup {
             String strafePodName,
             String imuName,
             RevHubOrientationOnRobot.LogoFacingDirection logoDirection,
-            RevHubOrientationOnRobot.UsbFacingDirection usbDirection
-    ) {
+            RevHubOrientationOnRobot.UsbFacingDirection usbDirection) {
         this.forwardPodName = forwardPodName;
         this.strafePodName = strafePodName;
         this.imuName = imuName;
@@ -169,24 +200,16 @@ class TwoWheelForwardResolution extends TuningOpMode<Double> {
     TwoWheelForwardResolution(TwoWheelSetup values, double distance) {
         super(
                 "Forward Encoder Resolution Identification",
-                "Push your robot forward " + distance + " inches exactly and then stop the Opmode",
-                true
-        );
+                "Push your robot forward " + distance + " inches exactly and then stop the OpMode",
+                true);
         this.values = values;
         this.distance = distance;
     }
 
     @Override
     protected Double runTuningOpMode() {
-        TwoWheelConfig config = TwoWheelTuner.config(
-                values,
-                1.0,
-                1.0,
-                Encoder.FORWARD,
-                Encoder.FORWARD,
-                0.0,
-                0.0
-        );
+        TwoWheelConfig config =
+                TwoWheelTuner.config(values, 1.0, 1.0, Encoder.FORWARD, Encoder.FORWARD, 0.0, 0.0);
 
         TwoWheelLocalizer localizer = new TwoWheelLocalizer(hardwareMap, config);
         localizer.setPose(new Pose(0, 0));
@@ -216,24 +239,16 @@ class TwoWheelStrafeResolution extends TuningOpMode<Double> {
     TwoWheelStrafeResolution(TwoWheelSetup values, double distance) {
         super(
                 "Strafe Encoder Resolution Identification",
-                "Push your robot left " + distance + " inches exactly and then stop the Opmode",
-                true
-        );
+                "Push your robot left " + distance + " inches exactly and then stop the OpMode",
+                true);
         this.values = values;
         this.distance = distance;
     }
 
     @Override
     protected Double runTuningOpMode() {
-        TwoWheelConfig config = TwoWheelTuner.config(
-                values,
-                1.0,
-                1.0,
-                Encoder.FORWARD,
-                Encoder.FORWARD,
-                0.0,
-                0.0
-        );
+        TwoWheelConfig config =
+                TwoWheelTuner.config(values, 1.0, 1.0, Encoder.FORWARD, Encoder.FORWARD, 0.0, 0.0);
 
         TwoWheelLocalizer localizer = new TwoWheelLocalizer(hardwareMap, config);
         localizer.setPose(new Pose(0, 0));
@@ -258,13 +273,13 @@ class TwoWheelForwardDirection extends TuningOpMode<Boolean> {
     double forwardTicksToInches;
     double strafeTicksToInches;
 
-    TwoWheelForwardDirection(TwoWheelSetup values, double forwardTicksToInches, double strafeTicksToInches) {
+    TwoWheelForwardDirection(
+            TwoWheelSetup values, double forwardTicksToInches, double strafeTicksToInches) {
         super(
                 "Forward Direction Identification",
                 "Determines if your forward pod needs to be reversed.\n"
-                        + "Push your robot forward and then stop the Opmode",
-                true
-        );
+                        + "Push your robot forward and then stop the OpMode",
+                true);
         this.values = values;
         this.forwardTicksToInches = forwardTicksToInches;
         this.strafeTicksToInches = strafeTicksToInches;
@@ -272,15 +287,15 @@ class TwoWheelForwardDirection extends TuningOpMode<Boolean> {
 
     @Override
     protected Boolean runTuningOpMode() {
-        TwoWheelConfig config = TwoWheelTuner.config(
-                values,
-                forwardTicksToInches,
-                strafeTicksToInches,
-                Encoder.FORWARD,
-                Encoder.FORWARD,
-                0.0,
-                0.0
-        );
+        TwoWheelConfig config =
+                TwoWheelTuner.config(
+                        values,
+                        forwardTicksToInches,
+                        strafeTicksToInches,
+                        Encoder.FORWARD,
+                        Encoder.FORWARD,
+                        0.0,
+                        0.0);
 
         TwoWheelLocalizer localizer = new TwoWheelLocalizer(hardwareMap, config);
         localizer.setPose(new Pose(0, 0));
@@ -300,13 +315,13 @@ class TwoWheelStrafeDirection extends TuningOpMode<Boolean> {
     double forwardTicksToInches;
     double strafeTicksToInches;
 
-    TwoWheelStrafeDirection(TwoWheelSetup values, double forwardTicksToInches, double strafeTicksToInches) {
+    TwoWheelStrafeDirection(
+            TwoWheelSetup values, double forwardTicksToInches, double strafeTicksToInches) {
         super(
                 "Strafe Direction Identification",
                 "Determines if your strafe pod needs to be reversed.\n"
-                        + "Push your robot left and then stop the Opmode",
-                true
-        );
+                        + "Push your robot left and then stop the OpMode",
+                true);
         this.values = values;
         this.forwardTicksToInches = forwardTicksToInches;
         this.strafeTicksToInches = strafeTicksToInches;
@@ -314,15 +329,15 @@ class TwoWheelStrafeDirection extends TuningOpMode<Boolean> {
 
     @Override
     protected Boolean runTuningOpMode() {
-        TwoWheelConfig config = TwoWheelTuner.config(
-                values,
-                forwardTicksToInches,
-                strafeTicksToInches,
-                Encoder.FORWARD,
-                Encoder.FORWARD,
-                0.0,
-                0.0
-        );
+        TwoWheelConfig config =
+                TwoWheelTuner.config(
+                        values,
+                        forwardTicksToInches,
+                        strafeTicksToInches,
+                        Encoder.FORWARD,
+                        Encoder.FORWARD,
+                        0.0,
+                        0.0);
 
         TwoWheelLocalizer localizer = new TwoWheelLocalizer(hardwareMap, config);
         localizer.setPose(new Pose(0, 0));
@@ -350,14 +365,13 @@ class TwoWheelOffsets extends TuningOpMode<List<Double>> {
             double forwardTicksToInches,
             double strafeTicksToInches,
             boolean forwardPodReversed,
-            boolean strafePodReversed
-    ) {
+            boolean strafePodReversed) {
         super(
                 "Two Wheel Offset Identification",
                 "Automatically identifies the offsets for your Two Wheel localizer.\n"
-                        + "Spin your robot in place 180 degrees counterclockwise and then stop the Opmode",
-                true
-        );
+                        + "Spin your robot in place 180 degrees counterclockwise and then stop the"
+                        + " OpMode",
+                true);
         this.values = values;
         this.forwardTicksToInches = forwardTicksToInches;
         this.strafeTicksToInches = strafeTicksToInches;
@@ -367,15 +381,15 @@ class TwoWheelOffsets extends TuningOpMode<List<Double>> {
 
     @Override
     protected List<Double> runTuningOpMode() {
-        TwoWheelConfig config = TwoWheelTuner.config(
-                values,
-                forwardTicksToInches,
-                strafeTicksToInches,
-                forwardPodReversed ? Encoder.REVERSE : Encoder.FORWARD,
-                strafePodReversed ? Encoder.REVERSE : Encoder.FORWARD,
-                0.0,
-                0.0
-        );
+        TwoWheelConfig config =
+                TwoWheelTuner.config(
+                        values,
+                        forwardTicksToInches,
+                        strafeTicksToInches,
+                        forwardPodReversed ? Encoder.REVERSE : Encoder.FORWARD,
+                        strafePodReversed ? Encoder.REVERSE : Encoder.FORWARD,
+                        0.0,
+                        0.0);
 
         TwoWheelLocalizer localizer = new TwoWheelLocalizer(hardwareMap, config);
         localizer.setPose(Pose.zero());

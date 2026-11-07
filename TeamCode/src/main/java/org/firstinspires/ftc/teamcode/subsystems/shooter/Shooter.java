@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.shooter;
 
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
-import org.firstinspires.ftc.teamcode.hardware.rollers.RollerIO;
 import org.firstinspires.ftc.teamcode.hardware.shooter.ShooterIO;
 import org.firstinspires.ftc.teamcode.hardware.shooter.ShooterIOInputs;
 
@@ -17,7 +16,7 @@ public class Shooter {
 
     public void setTargetRPM(double targetRPM) {
         this.targetRPM = targetRPM;
-        io.setShooterTargetMotorRPM(targetRPM);
+        io.setTargetRPM(targetRPM);
     }
 
     public void stop() {
@@ -27,18 +26,17 @@ public class Shooter {
 
     public void periodic() {
         io.setVelocityPIDF(
-                LowAltitudeConstants.SHOOTER.SHOOTER_P,
-                LowAltitudeConstants.SHOOTER.SHOOTER_I,
-                LowAltitudeConstants.SHOOTER.SHOOTER_D,
-                LowAltitudeConstants.SHOOTER.SHOOTER_F
-        );
+                LowAltitudeConstants.Shooter.kP,
+                LowAltitudeConstants.Shooter.kI,
+                LowAltitudeConstants.Shooter.kD,
+                LowAltitudeConstants.Shooter.kF);
 
         io.updateInputs(inputs);
     }
 
     public boolean isAtTargetRPM() {
         return Math.abs(inputs.currentRPM - targetRPM)
-                <= LowAltitudeConstants.SHOOTER.RPM_TOLERANCE;
+                <= LowAltitudeConstants.Shooter.RPM_TOLERANCE;
     }
 
     public double getCurrentRPM() {

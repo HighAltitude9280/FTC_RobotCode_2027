@@ -21,90 +21,57 @@ public class ShooterPIDFTuning extends LinearOpMode {
         Scheduler.reset();
 
         MotorShooterIO shooterIO =
-                new MotorShooterIO(
-                        hardwareMap,
-                        LowAltitudeConstants.SHOOTER.SHOOTER_NAME
-                );
+                new MotorShooterIO(hardwareMap, LowAltitudeConstants.Shooter.MOTOR_NAME);
 
-        Shooter shooter =
-                new Shooter(shooterIO);
+        Shooter shooter = new Shooter(shooterIO);
 
-        Command shooterTune =
-                ShooterCommands.shooterTune(shooter);
+        Command shooterTuningCommand = ShooterCommands.tuneVelocity(shooter);
 
-        TelemetryManager panelsTelemetry =
-                PanelsTelemetry.INSTANCE.getTelemetry();
+        TelemetryManager panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
-        telemetry.addLine("Shooter PIDF Tuning listo");
-        telemetry.addLine("A = Shooter ON");
-        telemetry.addLine("B = Shooter OFF");
+        telemetry.addLine("Ajuste del shooter listo: Shooter PIDF Tuning.");
+        telemetry.addLine("A: activar el shooter.");
+        telemetry.addLine("B: detener el shooter.");
         telemetry.update();
 
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad1.a && !shooterTune.isScheduled()) {
-                shooterTune.schedule();
+            if (gamepad1.a && !shooterTuningCommand.isScheduled()) {
+                shooterTuningCommand.schedule();
             }
 
-            if (gamepad1.b && shooterTune.isScheduled()) {
-                shooterTune.cancel();
+            if (gamepad1.b && shooterTuningCommand.isScheduled()) {
+                shooterTuningCommand.cancel();
             }
 
             Scheduler.execute();
 
             shooter.periodic();
 
-            panelsTelemetry.addData(
-                    "Shooter Enabled",
-                    shooterTune.isScheduled()
-            );
+            panelsTelemetry.addData("Shooter Enabled", shooterTuningCommand.isScheduled());
 
-            panelsTelemetry.addData(
-                    "Shooter Target RPM",
-                    shooter.getTargetRPM()
-            );
+            panelsTelemetry.addData("Shooter Target RPM", shooter.getTargetRPM());
 
-            panelsTelemetry.addData(
-                    "Shooter Current RPM",
-                    shooter.getCurrentRPM()
-            );
+            panelsTelemetry.addData("Shooter Current RPM", shooter.getCurrentRPM());
 
-            panelsTelemetry.addData(
-                    "Shooter RPM Error",
-                    shooter.getRPMError()
-            );
+            panelsTelemetry.addData("Shooter RPM Error", shooter.getRPMError());
 
-            panelsTelemetry.addData(
-                    "Shooter Ready",
-                    shooter.isAtTargetRPM()
-            );
+            panelsTelemetry.addData("Shooter Ready", shooter.isAtTargetRPM());
 
-            panelsTelemetry.addData(
-                    "Shooter P",
-                    LowAltitudeConstants.SHOOTER.SHOOTER_P
-            );
+            panelsTelemetry.addData("Shooter P", LowAltitudeConstants.Shooter.kP);
 
-            panelsTelemetry.addData(
-                    "Shooter I",
-                    LowAltitudeConstants.SHOOTER.SHOOTER_I
-            );
+            panelsTelemetry.addData("Shooter I", LowAltitudeConstants.Shooter.kI);
 
-            panelsTelemetry.addData(
-                    "Shooter D",
-                    LowAltitudeConstants.SHOOTER.SHOOTER_D
-            );
+            panelsTelemetry.addData("Shooter D", LowAltitudeConstants.Shooter.kD);
 
-            panelsTelemetry.addData(
-                    "Shooter F",
-                    LowAltitudeConstants.SHOOTER.SHOOTER_F
-            );
+            panelsTelemetry.addData("Shooter F", LowAltitudeConstants.Shooter.kF);
 
             panelsTelemetry.update(telemetry);
         }
 
-        if (shooterTune.isScheduled()) {
-            shooterTune.cancel();
+        if (shooterTuningCommand.isScheduled()) {
+            shooterTuningCommand.cancel();
         }
 
         shooter.stop();

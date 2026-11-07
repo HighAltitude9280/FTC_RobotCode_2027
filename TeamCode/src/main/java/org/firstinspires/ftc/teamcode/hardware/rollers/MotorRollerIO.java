@@ -11,18 +11,9 @@ public class MotorRollerIO implements RollerIO {
     public MotorRollerIO(HardwareMap hardwareMap, String intakeRollerMotorName) {
         intakeRollerMotor = hardwareMap.get(DcMotorEx.class, intakeRollerMotorName);
 
-        intakeRollerMotor.setDirection(
-                LowAltitudeConstants
-                        .INTAKE
-                        .INTAKE_DIRECTION);
-        intakeRollerMotor.setZeroPowerBehavior(
-                LowAltitudeConstants
-                .INTAKE
-                .INTAKE_ZERO_POWER_BEHAVIOR);
-        intakeRollerMotor.setMode(
-                LowAltitudeConstants
-                        .INTAKE
-                        .INTAKE_RUN_MODE);
+        intakeRollerMotor.setDirection(LowAltitudeConstants.Intake.DIRECTION);
+        intakeRollerMotor.setZeroPowerBehavior(LowAltitudeConstants.Intake.ZERO_POWER_BEHAVIOR);
+        intakeRollerMotor.setMode(LowAltitudeConstants.Intake.RUN_MODE);
     }
 
     @Override

@@ -21,46 +21,39 @@ public class SubsystemTest extends LinearOpMode {
 
         RobotContainer robot = new RobotContainer(hardwareMap);
 
-        Command intakeIn =
-                IntakeCommands.intakeIn(robot.intake);
+        Command intakeIn = IntakeCommands.intakeIn(robot.intake);
 
-        Command intakeOut =
-                IntakeCommands.intakeOut(robot.intake);
+        Command intakeOut = IntakeCommands.intakeOut(robot.intake);
 
-        double shooterTestRPM = LowAltitudeConstants.SHOOTER.SHOOT_RPM;
+        double shooterTestRPM = LowAltitudeConstants.Shooter.TARGET_RPM;
 
-        Command shooterShoot =
-                ShooterCommands.shooterShoot(
-                        robot.shooter,
-                        shooterTestRPM
-                );
+        Command shooterCommand = ShooterCommands.runAtRPM(robot.shooter, shooterTestRPM);
 
-        Command driveRobotOriented =
-                DrivetrainCommands.driveRobotOriented(
+        Command driveRobotCentricCommand =
+                DrivetrainCommands.driveRobotCentric(
                         robot.drivetrain,
                         () -> -gamepad1.left_stick_y,
                         () -> gamepad1.left_stick_x,
-                        () -> gamepad1.right_stick_x
-                );
+                        () -> gamepad1.right_stick_x);
 
-        telemetry.addLine("Subsystem Test listo");
+        telemetry.addLine("Prueba de subsistemas lista: Subsystem Test.");
         telemetry.update();
 
         waitForStart();
 
-        driveRobotOriented.schedule();
+        driveRobotCentricCommand.schedule();
 
         while (opModeIsActive()) {
 
             // =========================
-            // PERIODIC
+            // Actualización de subsistemas
             // =========================
 
             robot.drivetrain.periodic();
             robot.shooter.periodic();
 
             // =========================
-            // INTAKE
+            // Intake
             // =========================
 
             if (gamepad1.right_bumper) {
@@ -86,103 +79,67 @@ public class SubsystemTest extends LinearOpMode {
                 }
             }
 
-
             // =========================
-            // SHOOTER
+            // Shooter
             // A = mantener shooter activo
             // =========================
 
             if (gamepad1.a) {
 
-                if (!shooterShoot.isScheduled()) {
-                    shooterShoot.schedule();
+                if (!shooterCommand.isScheduled()) {
+                    shooterCommand.schedule();
                 }
 
             } else {
 
-                if (shooterShoot.isScheduled()) {
-                    shooterShoot.cancel();
+                if (shooterCommand.isScheduled()) {
+                    shooterCommand.cancel();
                 }
             }
 
-
             // =========================
-            // IVY SCHEDULER
+            // Ejecución de comandos Ivy
             // =========================
 
             Scheduler.execute();
 
-
             // =========================
-            // DRIVETRAIN TELEMETRY
-            // =========================
-
-            telemetry.addData(
-                    "Heading radians",
-                    robot.drivetrain.getHeadingRadians()
-            );
-
-            telemetry.addData(
-                    "Heading degrees",
-                    robot.drivetrain.getHeadingDegrees()
-            );
-
-
-            // =========================
-            // SHOOTER TELEMETRY
+            // Drivetrain TELEMETRY
             // =========================
 
-            telemetry.addData(
-                    "Shooter Target RPM",
-                    robot.shooter.getTargetRPM()
-            );
+            telemetry.addData("Heading (rad)", robot.drivetrain.getHeadingRadians());
 
-            telemetry.addData(
-                    "Shooter Current RPM",
-                    robot.shooter.getCurrentRPM()
-            );
-
-            telemetry.addData(
-                    "Shooter Error RPM",
-                    robot.shooter.getRPMError()
-            );
-
-            telemetry.addData(
-                    "Shooter Ready",
-                    robot.shooter.isAtTargetRPM()
-            );
-
-            telemetry.addData(
-                    "Shooter Command",
-                    shooterShoot.isScheduled()
-            );
-
+            telemetry.addData("Heading (deg)", robot.drivetrain.getHeadingDegrees());
 
             // =========================
-            // GAMEPAD TELEMETRY
+            // Shooter TELEMETRY
             // =========================
 
-            telemetry.addData(
-                    "Left Y Joystick",
-                    -gamepad1.left_stick_y
-            );
+            telemetry.addData("Shooter Target RPM", robot.shooter.getTargetRPM());
 
-            telemetry.addData(
-                    "Left X Joystick",
-                    gamepad1.left_stick_x
-            );
+            telemetry.addData("Shooter Current RPM", robot.shooter.getCurrentRPM());
 
-            telemetry.addData(
-                    "Right X Joystick",
-                    gamepad1.right_stick_x
-            );
+            telemetry.addData("Shooter RPM Error", robot.shooter.getRPMError());
+
+            telemetry.addData("Shooter Ready", robot.shooter.isAtTargetRPM());
+
+            telemetry.addData("Shooter Command", shooterCommand.isScheduled());
+
+            // =========================
+            // Telemetría del gamepad
+            // =========================
+
+            telemetry.addData("Left Y Joystick", -gamepad1.left_stick_y);
+
+            telemetry.addData("Left X Joystick", gamepad1.left_stick_x);
+
+            telemetry.addData("Right X Joystick", gamepad1.right_stick_x);
 
             telemetry.update();
         }
 
-
         // =========================
-        // CLEANUP
+        // Cierre de la prueba
         // =========================
 
         if (intakeIn.isScheduled()) {
@@ -193,8 +150,8 @@ public class SubsystemTest extends LinearOpMode {
             intakeOut.cancel();
         }
 
-        if (shooterShoot.isScheduled()) {
-            shooterShoot.cancel();
+        if (shooterCommand.isScheduled()) {
+            shooterCommand.cancel();
         }
 
         robot.drivetrain.stop();

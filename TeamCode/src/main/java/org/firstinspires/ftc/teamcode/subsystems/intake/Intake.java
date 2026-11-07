@@ -11,15 +11,11 @@ public class Intake {
     }
 
     public void intakeIn() {
-        io.setRollerMotorPower(
-                LowAltitudeConstants.INTAKE.INTAKE_IN_POWER
-        );
+        io.setRollerMotorPower(LowAltitudeConstants.Intake.IN_POWER);
     }
 
     public void intakeOut() {
-        io.setRollerMotorPower(
-                LowAltitudeConstants.INTAKE.INTAKE_OUT_POWER
-        );
+        io.setRollerMotorPower(LowAltitudeConstants.Intake.OUT_POWER);
     }
 
     public void stop() {

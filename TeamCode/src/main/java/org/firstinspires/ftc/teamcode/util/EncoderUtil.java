@@ -7,13 +7,10 @@ public final class EncoderUtil {
     private EncoderUtil() {}
 
     public static double shooterRPMToTicksPerSecond(double rpm) {
-        return rpm / 60.0
-                * LowAltitudeConstants.SHOOTER.SHOOTER_TICKS_PER_REV;
+        return rpm / 60.0 * LowAltitudeConstants.Shooter.TICKS_PER_REV;
     }
 
     public static double shooterTicksPerSecondToRPM(double ticksPerSecond) {
-        return ticksPerSecond
-                / LowAltitudeConstants.SHOOTER.SHOOTER_TICKS_PER_REV
-                * 60.0;
+        return ticksPerSecond / LowAltitudeConstants.Shooter.TICKS_PER_REV * 60.0;
     }
 }

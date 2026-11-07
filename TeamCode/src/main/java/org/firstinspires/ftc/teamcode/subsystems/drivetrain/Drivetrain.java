@@ -1,24 +1,19 @@
 package org.firstinspires.ftc.teamcode.subsystems.drivetrain;
 
-import org.firstinspires.ftc.teamcode.hardware.drivetrain.DriveTrainIO;
-import org.firstinspires.ftc.teamcode.hardware.drivetrain.DriveTrainIOInputs;
+import org.firstinspires.ftc.teamcode.hardware.drivetrain.DrivetrainIO;
+import org.firstinspires.ftc.teamcode.hardware.drivetrain.DrivetrainIOInputs;
 
 public class Drivetrain {
 
-    private final DriveTrainIO io;
+    private final DrivetrainIO io;
 
-    private final DriveTrainIOInputs inputs =
-            new DriveTrainIOInputs();
+    private final DrivetrainIOInputs inputs = new DrivetrainIOInputs();
 
-    public Drivetrain(DriveTrainIO io) {
+    public Drivetrain(DrivetrainIO io) {
         this.io = io;
     }
 
-    public void driveRobotCentric(
-            double forward,
-            double strafe,
-            double rotation
-    ) {
+    public void driveRobotCentric(double forward, double strafe, double rotation) {
 
         double frontLeftPower = forward + strafe + rotation;
 
@@ -28,35 +23,19 @@ public class Drivetrain {
 
         double backRightPower = forward + strafe - rotation;
 
-
         double maxMagnitude =
                 Math.max(
                         1.0,
                         Math.max(
-                                Math.max(
-                                        Math.abs(frontLeftPower),
-                                        Math.abs(frontRightPower)
-                                ),
-                                Math.max(
-                                        Math.abs(backLeftPower),
-                                        Math.abs(backRightPower)
-                                )
-                        )
-                );
-
+                                Math.max(Math.abs(frontLeftPower), Math.abs(frontRightPower)),
+                                Math.max(Math.abs(backLeftPower), Math.abs(backRightPower))));
 
         frontLeftPower /= maxMagnitude;
         frontRightPower /= maxMagnitude;
         backLeftPower /= maxMagnitude;
         backRightPower /= maxMagnitude;
 
-
-        io.setMotorPowers(
-                frontLeftPower,
-                frontRightPower,
-                backLeftPower,
-                backRightPower
-        );
+        io.setMotorPowers(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
     public void stop() {
@@ -70,5 +49,8 @@ public class Drivetrain {
     public double getHeadingRadians() {
         return inputs.headingRadians;
     }
-    public double getHeadingDegrees() { return inputs.headingDegrees; }
+
+    public double getHeadingDegrees() {
+        return inputs.headingDegrees;
+    }
 }

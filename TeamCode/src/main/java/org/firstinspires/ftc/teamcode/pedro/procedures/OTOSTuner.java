@@ -23,10 +23,11 @@ public class OTOSTuner extends Procedure {
         Inputs.Field<String> name = inputs.s("HardwareMap Name").withDefault("otos");
         awaitInputs(inputs);
 
-        Inputs scalar = inputs(
-                "Scalar Identification",
-                "Set the distance you will push your robot forward in inches and the number of full rotations for the angular test"
-        );
+        Inputs scalar =
+                inputs(
+                        "Scalar Identification",
+                        "Set the distance you will push your robot forward in inches and the number"
+                                + " of full rotations for the angular test");
         Inputs.Field<Double> distance = scalar.d("Distance to push robot").withDefault(48.0);
         Inputs.Field<Integer> turns = scalar.i("Full rotations").withDefault(10);
         awaitInputs(scalar);
@@ -45,7 +46,9 @@ public class OTOSTuner extends Procedure {
 
         List<Double> offsets = runOpMode(new OTOSOffsets(name.get(), linearScalar, angularScalar));
         if (offsets == null) {
-            abort("Offset stage ended without a saved pose. Rotate the robot 180 degrees about the robot center, then press Stop.");
+            abort(
+                    "Offset stage ended without a saved pose. Rotate the robot 180 degrees about"
+                            + " the robot center, then press Stop.");
             return;
         }
 
@@ -55,15 +58,26 @@ public class OTOSTuner extends Procedure {
         result("xOffset", offsets.get(0));
         result("yOffset", offsets.get(1));
 
-        code(Language.JAVA,"public static OTOSConfig localizerConfig = new OTOSConfig(c -> {\n" +
-                "    c.name.set(\"" + name.get() + "\");\n" +
-                "    c.linearScalar.set(" + linearScalar + ");\n" +
-                "    c.angularScalar.set(" + angularScalar + ");\n" +
-                "    c.offset.set(new Pose(" + offsets.get(0) + ", " + offsets.get(1) + "));\n" +
-                "    c.linearUnit.set(DistanceUnit.INCH);\n" +
-                "});");
+        code(
+                Language.JAVA,
+                "public static OTOSConfig localizerConfig = new OTOSConfig(c -> {\n"
+                        + "    c.name.set(\""
+                        + name.get()
+                        + "\");\n"
+                        + "    c.linearScalar.set("
+                        + linearScalar
+                        + ");\n"
+                        + "    c.angularScalar.set("
+                        + angularScalar
+                        + ");\n"
+                        + "    c.offset.set(new Pose("
+                        + offsets.get(0)
+                        + ", "
+                        + offsets.get(1)
+                        + "));\n"
+                        + "    c.linearUnit.set(DistanceUnit.INCH);\n"
+                        + "});");
     }
-
 }
 
 class OTOSLinearScalar extends TuningOpMode<Double> {
@@ -71,9 +85,12 @@ class OTOSLinearScalar extends TuningOpMode<Double> {
     double distance;
 
     public OTOSLinearScalar(String name, double distance) {
-        super("Linear Scalar Identification",
+        super(
+                "Linear Scalar Identification",
                 "Determines the linear scalar for the OTOS localizer. \n"
-                        + "Push your robot forward " + distance + " inches, stop moving, then press Stop",
+                        + "Push your robot forward "
+                        + distance
+                        + " inches, stop moving, then press Stop",
                 true);
         this.name = name;
         this.distance = distance;
@@ -81,13 +98,15 @@ class OTOSLinearScalar extends TuningOpMode<Double> {
 
     @Override
     protected Double runTuningOpMode() {
-        OTOSConfig config = new OTOSConfig(c -> {
-            c.name.set(name);
-            c.linearUnit.set(DistanceUnit.INCH);
-            c.linearScalar.set(1.0);
-            c.angularScalar.set(1.0);
-            c.offset.set(Pose.zero());
-        });
+        OTOSConfig config =
+                new OTOSConfig(
+                        c -> {
+                            c.name.set(name);
+                            c.linearUnit.set(DistanceUnit.INCH);
+                            c.linearScalar.set(1.0);
+                            c.angularScalar.set(1.0);
+                            c.offset.set(Pose.zero());
+                        });
         OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap, config);
         localizer.setPose(Pose.zero());
         localizer.update();
@@ -98,8 +117,6 @@ class OTOSLinearScalar extends TuningOpMode<Double> {
         while (!isStopRequested()) {
             localizer.update();
             position = localizer.pose();
-
-
         }
 
         if (position == null || Math.abs(position.x()) <= 1e-9) {
@@ -116,9 +133,12 @@ class OTOSAngularScalar extends TuningOpMode<Double> {
     double targetRadians;
 
     public OTOSAngularScalar(String name, int turns) {
-        super("Angular Scalar Identification",
+        super(
+                "Angular Scalar Identification",
                 "Determines the angular scalar for the OTOS localizer. \n"
-                        + "Spin your robot " + turns + " full rotations, stop moving, then press Stop",
+                        + "Spin your robot "
+                        + turns
+                        + " full rotations, stop moving, then press Stop",
                 true);
         this.name = name;
         this.turns = turns;
@@ -127,13 +147,15 @@ class OTOSAngularScalar extends TuningOpMode<Double> {
 
     @Override
     protected Double runTuningOpMode() {
-        OTOSConfig config = new OTOSConfig(c -> {
-            c.name.set(name);
-            c.linearUnit.set(DistanceUnit.INCH);
-            c.linearScalar.set(1.0);
-            c.angularScalar.set(1.0);
-            c.offset.set(Pose.zero());
-        });
+        OTOSConfig config =
+                new OTOSConfig(
+                        c -> {
+                            c.name.set(name);
+                            c.linearUnit.set(DistanceUnit.INCH);
+                            c.linearScalar.set(1.0);
+                            c.angularScalar.set(1.0);
+                            c.offset.set(Pose.zero());
+                        });
         OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap, config);
         localizer.setPose(Pose.zero());
         localizer.update();
@@ -151,8 +173,6 @@ class OTOSAngularScalar extends TuningOpMode<Double> {
             double currentHeading = position.heading();
             totalHeading += Angle.normalizeSigned(currentHeading - prevHeading);
             prevHeading = currentHeading;
-
-
         }
 
         if (Math.abs(totalHeading) <= 1e-9) {
@@ -168,9 +188,11 @@ class OTOSOffsets extends TuningOpMode<List<Double>> {
     double linearScalar, angularScalar;
 
     public OTOSOffsets(String name, double linearScalar, double angularScalar) {
-        super("OTOS Offset Identification",
+        super(
+                "OTOS Offset Identification",
                 "Automatically identifies the X/Y offset for your OTOS localizer. \n"
-                        + "Rotate the robot 180 degrees counterclockwise about the robot center without translating it, stop moving, then press Stop",
+                    + "Rotate the robot 180 degrees counterclockwise about the robot center without"
+                    + " translating it, stop moving, then press Stop",
                 true);
         this.name = name;
         this.linearScalar = linearScalar;
@@ -179,13 +201,15 @@ class OTOSOffsets extends TuningOpMode<List<Double>> {
 
     @Override
     protected List<Double> runTuningOpMode() {
-        OTOSConfig config = new OTOSConfig(c -> {
-            c.name.set(name);
-            c.linearUnit.set(DistanceUnit.INCH);
-            c.linearScalar.set(linearScalar);
-            c.angularScalar.set(angularScalar);
-            c.offset.set(Pose.zero());
-        });
+        OTOSConfig config =
+                new OTOSConfig(
+                        c -> {
+                            c.name.set(name);
+                            c.linearUnit.set(DistanceUnit.INCH);
+                            c.linearScalar.set(linearScalar);
+                            c.angularScalar.set(angularScalar);
+                            c.offset.set(Pose.zero());
+                        });
         OTOSLocalizer localizer = new OTOSLocalizer(hardwareMap, config);
         localizer.setPose(Pose.zero());
         localizer.update();
