@@ -19,41 +19,85 @@ public class SubsystemTest extends LinearOpMode {
 
         Scheduler.reset();
 
-        RobotContainer robot = new RobotContainer(hardwareMap);
+        RobotContainer robot =
+                new RobotContainer(hardwareMap);
 
-        Command intakeIn = IntakeCommands.intakeIn(robot.intake);
 
-        Command intakeOut = IntakeCommands.intakeOut(robot.intake);
+        // =========================
+        // COMMANDS
+        // =========================
 
-        double shooterTestRPM = LowAltitudeConstants.Shooter.TARGET_RPM;
+        Command intakeIn =
+                IntakeCommands.intakeIn(robot.intake);
 
-        Command shooterCommand = ShooterCommands.runAtRPM(robot.shooter, shooterTestRPM);
+        Command intakeOut =
+                IntakeCommands.intakeOut(robot.intake);
 
-        Command driveRobotCentricCommand =
-                DrivetrainCommands.driveRobotCentric(
+        double shooterTestRPM =
+                LowAltitudeConstants.Shooter.TARGET_RPM;
+
+        Command shooterCommand =
+                ShooterCommands.runAtRPM(
+                        robot.shooter,
+                        shooterTestRPM
+                );
+
+        Command driveFieldCentricCommand =
+                DrivetrainCommands.driveFieldCentric(
                         robot.drivetrain,
                         () -> -gamepad1.left_stick_y,
                         () -> gamepad1.left_stick_x,
-                        () -> gamepad1.right_stick_x);
+                        () -> gamepad1.right_stick_x
+                );
 
-        telemetry.addLine("Prueba de subsistemas lista: Subsystem Test.");
+
+        // Para detectar únicamente cuando se PRESIONA options.
+        boolean previousOptions = false;
+
+
+        telemetry.addLine("Prueba de subsistemas lista.");
+        telemetry.addLine("OPTIONS = Reset Field Heading");
         telemetry.update();
+
 
         waitForStart();
 
-        driveRobotCentricCommand.schedule();
+        if (isStopRequested()) {
+            return;
+        }
+
+
+        // El comando manual permanece activo continuamente.
+        driveFieldCentricCommand.schedule();
+
 
         while (opModeIsActive()) {
 
             // =========================
-            // Actualización de subsistemas
+            // RESET FIELD HEADING
             // =========================
 
+            boolean currentOptions = gamepad1.options;
+
+            if (currentOptions && !previousOptions) {
+                robot.drivetrain.resetYaw();
+            }
+
+            previousOptions = currentOptions;
+
+
+            // =========================
+            // ACTUALIZACIÓN SUBSISTEMAS
+            // =========================
+
+            // Se ejecuta después del reset para leer inmediatamente
+            // el nuevo heading del IMU.
             robot.drivetrain.periodic();
             robot.shooter.periodic();
 
+
             // =========================
-            // Intake
+            // INTAKE
             // =========================
 
             if (gamepad1.right_bumper) {
@@ -79,8 +123,9 @@ public class SubsystemTest extends LinearOpMode {
                 }
             }
 
+
             // =========================
-            // Shooter
+            // SHOOTER
             // A = mantener shooter activo
             // =========================
 
@@ -97,50 +142,99 @@ public class SubsystemTest extends LinearOpMode {
                 }
             }
 
+
             // =========================
-            // Ejecución de comandos Ivy
+            // IVY
             // =========================
 
             Scheduler.execute();
 
-            // =========================
-            // Drivetrain TELEMETRY
-            // =========================
-
-            telemetry.addData("Heading (rad)", robot.drivetrain.getHeadingRadians());
-
-            telemetry.addData("Heading (deg)", robot.drivetrain.getHeadingDegrees());
 
             // =========================
-            // Shooter TELEMETRY
+            // DRIVETRAIN TELEMETRY
             // =========================
 
-            telemetry.addData("Shooter Target RPM", robot.shooter.getTargetRPM());
+            telemetry.addData(
+                    "Heading (rad)",
+                    robot.drivetrain.getHeadingRadians()
+            );
 
-            telemetry.addData("Shooter Current RPM", robot.shooter.getCurrentRPM());
+            telemetry.addData(
+                    "Heading (deg)",
+                    robot.drivetrain.getHeadingDegrees()
+            );
 
-            telemetry.addData("Shooter RPM Error", robot.shooter.getRPMError());
+            telemetry.addData(
+                    "Field Centric Command",
+                    driveFieldCentricCommand.isScheduled()
+            );
 
-            telemetry.addData("Shooter Ready", robot.shooter.isAtTargetRPM());
-
-            telemetry.addData("Shooter Command", shooterCommand.isScheduled());
 
             // =========================
-            // Telemetría del gamepad
+            // SHOOTER TELEMETRY
             // =========================
 
-            telemetry.addData("Left Y Joystick", -gamepad1.left_stick_y);
+            telemetry.addData(
+                    "Shooter Target RPM",
+                    robot.shooter.getTargetRPM()
+            );
 
-            telemetry.addData("Left X Joystick", gamepad1.left_stick_x);
+            telemetry.addData(
+                    "Shooter Current RPM",
+                    robot.shooter.getCurrentRPM()
+            );
 
-            telemetry.addData("Right X Joystick", gamepad1.right_stick_x);
+            telemetry.addData(
+                    "Shooter RPM Error",
+                    robot.shooter.getRPMError()
+            );
+
+            telemetry.addData(
+                    "Shooter Ready",
+                    robot.shooter.isAtTargetRPM()
+            );
+
+            telemetry.addData(
+                    "Shooter Command",
+                    shooterCommand.isScheduled()
+            );
+
+
+            // =========================
+            // GAMEPAD TELEMETRY
+            // =========================
+
+            telemetry.addData(
+                    "Left Y Joystick",
+                    -gamepad1.left_stick_y
+            );
+
+            telemetry.addData(
+                    "Left X Joystick",
+                    gamepad1.left_stick_x
+            );
+
+            telemetry.addData(
+                    "Right X Joystick",
+                    gamepad1.right_stick_x
+            );
+
+            telemetry.addData(
+                    "OPTIONS",
+                    gamepad1.options
+            );
 
             telemetry.update();
         }
 
+
         // =========================
-        // Cierre de la prueba
+        // CLEANUP
         // =========================
+
+        if (driveFieldCentricCommand.isScheduled()) {
+            driveFieldCentricCommand.cancel();
+        }
 
         if (intakeIn.isScheduled()) {
             intakeIn.cancel();
@@ -156,5 +250,7 @@ public class SubsystemTest extends LinearOpMode {
 
         robot.drivetrain.stop();
         robot.shooter.stop();
+
+        Scheduler.reset();
     }
 }

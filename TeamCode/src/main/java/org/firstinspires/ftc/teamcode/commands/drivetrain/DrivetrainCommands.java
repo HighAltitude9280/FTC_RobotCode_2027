@@ -22,6 +22,22 @@ public final class DrivetrainCommands {
                                         forward.getAsDouble(),
                                         strafe.getAsDouble(),
                                         rotation.getAsDouble()))
+                .setEnd(endCondition -> drivetrain.stop())
+                .requiring(drivetrain);
+    }
+
+    public static Command driveFieldCentric(
+            Drivetrain drivetrain,
+            DoubleSupplier forward,
+            DoubleSupplier strafe,
+            DoubleSupplier rotation) {
+        return infinite(
+                () ->
+                        drivetrain.driveFieldCentric(
+                                forward.getAsDouble(),
+                                strafe.getAsDouble(),
+                                rotation.getAsDouble()))
+                .setEnd(endCondition -> drivetrain.stop())
                 .requiring(drivetrain);
     }
 }

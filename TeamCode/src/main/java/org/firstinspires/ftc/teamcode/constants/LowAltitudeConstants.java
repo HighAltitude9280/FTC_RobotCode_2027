@@ -50,10 +50,10 @@ public final class LowAltitudeConstants {
 
         public static final double RPM_TOLERANCE = 75.0;
 
-        public static double kP = 5.0;
+        public static double kP = 30.0;
         public static double kI = 0.0;
-        public static double kD = 0.0;
-        public static double kF = 10.0;
+        public static double kD = 0.7;
+        public static double kF = 12.0;
 
         private Shooter() {}
     }

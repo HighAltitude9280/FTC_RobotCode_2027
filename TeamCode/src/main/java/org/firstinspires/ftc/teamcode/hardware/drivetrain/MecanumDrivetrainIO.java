@@ -14,7 +14,6 @@ public class MecanumDrivetrainIO implements DrivetrainIO {
     private final DcMotorEx frontRight;
     private final DcMotorEx backLeft;
     private final DcMotorEx backRight;
-
     private final IMU imu;
 
     public MecanumDrivetrainIO(
@@ -82,5 +81,10 @@ public class MecanumDrivetrainIO implements DrivetrainIO {
         frontRight.setPower(frontRightPower);
         backLeft.setPower(backLeftPower);
         backRight.setPower(backRightPower);
+    }
+
+    @Override
+    public void resetYaw() {
+        imu.resetYaw();
     }
 }
