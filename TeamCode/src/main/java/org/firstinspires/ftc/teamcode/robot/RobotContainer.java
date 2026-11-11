@@ -36,4 +36,15 @@ public class RobotContainer {
         intake = new Intake(motorRollerIO);
         shooter = new Shooter(motorShooterIO);
     }
+
+    public void periodic() {
+        drivetrain.periodic();
+        shooter.periodic();
+    }
+
+    public void stopAll() {
+        drivetrain.stop();
+        intake.stop();
+        shooter.stop();
+    }
 }
