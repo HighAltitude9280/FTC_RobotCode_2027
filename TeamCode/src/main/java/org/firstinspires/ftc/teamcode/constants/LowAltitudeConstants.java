@@ -7,14 +7,12 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public final class LowAltitudeConstants {
     public static final class Drivetrain {
 
-        // Nombres de motor e IMU
         public static final String FRONT_LEFT_NAME = "frontLeft";
         public static final String FRONT_RIGHT_NAME = "frontRight";
         public static final String BACK_LEFT_NAME = "backLeft";
         public static final String BACK_RIGHT_NAME = "backRight";
         public static final String IMU_NAME = "imu";
 
-        // Configuración de motores
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
                 DcMotor.ZeroPowerBehavior.BRAKE;
         public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
@@ -22,6 +20,8 @@ public final class LowAltitudeConstants {
                 DcMotorSimple.Direction.REVERSE;
         public static final DcMotorSimple.Direction RIGHT_DIRECTION =
                 DcMotorSimple.Direction.FORWARD;
+
+        public static final double CHASSIS_SPEED_MULTIPLIER = 1.0;
 
         private Drivetrain() {}
     }

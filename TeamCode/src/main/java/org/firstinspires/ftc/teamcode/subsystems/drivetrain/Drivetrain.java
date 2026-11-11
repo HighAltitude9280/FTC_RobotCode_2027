@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.drivetrain;
 
+import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.hardware.drivetrain.DrivetrainIO;
 import org.firstinspires.ftc.teamcode.hardware.drivetrain.DrivetrainIOInputs;
 
@@ -83,10 +84,10 @@ public class Drivetrain {
         backRightPower /= maxMagnitude;
 
         io.setMotorPowers(
-                frontLeftPower,
-                frontRightPower,
-                backLeftPower,
-                backRightPower
+                frontLeftPower * LowAltitudeConstants.Drivetrain.CHASSIS_SPEED_MULTIPLIER,
+                frontRightPower * LowAltitudeConstants.Drivetrain.CHASSIS_SPEED_MULTIPLIER,
+                backLeftPower * LowAltitudeConstants.Drivetrain.CHASSIS_SPEED_MULTIPLIER,
+                backRightPower * LowAltitudeConstants.Drivetrain.CHASSIS_SPEED_MULTIPLIER
         );
     }
 
