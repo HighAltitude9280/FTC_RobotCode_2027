@@ -64,7 +64,7 @@ public class Drivetrain {
 
         double maxMagnitude =
                 Math.max(
-                        0.5,
+                        1.0,
                         Math.max(
                                 Math.max(
                                         Math.abs(frontLeftPower),
