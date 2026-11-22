@@ -37,9 +37,9 @@ public class BeedrilProfile implements ControlProfile {
 
         driveCommand = DrivetrainCommands.driveFieldCentric(
                 robot.drivetrain,
-                this::getChassisDriverForward,
-                this::getChassisDriverStrafe,
-                this::getChassisDriverTurn
+                this::getDriverForward,
+                this::getDriverStrafe,
+                this::getDriverTurn
         );
 
         resetYawCommand = instant(robot.drivetrain::resetYaw);
@@ -59,17 +59,17 @@ public class BeedrilProfile implements ControlProfile {
     }
 
     @Override
-    public double getChassisDriverForward() {
+    public double getDriverForward() {
         return -chassisOp.left_stick_y;
     }
 
     @Override
-    public double getChassisDriverStrafe() {
+    public double getDriverStrafe() {
         return chassisOp.left_stick_x;
     }
 
     @Override
-    public double getChassisDriverTurn() {
+    public double getDriverTurn() {
         return chassisOp.right_stick_x;
     }
 
