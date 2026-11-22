@@ -6,10 +6,12 @@ import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.hardware.drivetrain.MecanumDrivetrainIO;
 import org.firstinspires.ftc.teamcode.hardware.feeder.MotorFeederIO;
 import org.firstinspires.ftc.teamcode.hardware.intake.MotorIntakeIO;
+import org.firstinspires.ftc.teamcode.hardware.kicker.ServoKickerIO;
 import org.firstinspires.ftc.teamcode.hardware.shooter.MotorShooterIO;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.kicker.Kicker;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
 public class RobotContainer {
@@ -17,8 +19,8 @@ public class RobotContainer {
     public final Drivetrain drivetrain;
     public final Intake intake;
     public final Feeder feeder;
-
     public final Shooter shooter;
+    public final Kicker kicker;
 
     public RobotContainer(HardwareMap hardwareMap) {
         MecanumDrivetrainIO drivetrainIO =
@@ -36,13 +38,17 @@ public class RobotContainer {
         MotorFeederIO feederIO =
                 new MotorFeederIO(hardwareMap, LowAltitudeConstants.Feeder.MOTOR_NAME);
 
-        MotorShooterIO motorShooterIO =
+        MotorShooterIO shooterIO =
                 new MotorShooterIO(hardwareMap, LowAltitudeConstants.Shooter.MOTOR_NAME);
+
+        ServoKickerIO kickerIO =
+                new ServoKickerIO(hardwareMap, LowAltitudeConstants.Kicker.SERVO_NAME);
 
         drivetrain = new Drivetrain(drivetrainIO);
         intake = new Intake(intakeIO);
         feeder = new Feeder(feederIO);
-        shooter = new Shooter(motorShooterIO);
+        shooter = new Shooter(shooterIO);
+        kicker = new Kicker(kickerIO);
     }
 
     public void periodic() {
@@ -55,5 +61,6 @@ public class RobotContainer {
         intake.stop();
         feeder.stop();
         shooter.stop();
+        kicker.stop();
     }
 }
