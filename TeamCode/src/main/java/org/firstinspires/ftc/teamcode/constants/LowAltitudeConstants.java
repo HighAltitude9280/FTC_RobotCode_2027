@@ -38,6 +38,18 @@ public final class LowAltitudeConstants {
         private Intake() {}
     }
 
+    public static final class Feeder {
+        public static final String MOTOR_NAME = "feeder";
+        public static final double IN_POWER = 0.5;
+        public static final double OUT_POWER = -0.5;
+        public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
+                DcMotor.ZeroPowerBehavior.BRAKE;
+        public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
+        public static final DcMotorSimple.Direction DIRECTION = DcMotorSimple.Direction.FORWARD;
+
+        private Feeder() {}
+    }
+
     @Configurable
     public static final class Shooter {
         public static final String MOTOR_NAME = "shooter";

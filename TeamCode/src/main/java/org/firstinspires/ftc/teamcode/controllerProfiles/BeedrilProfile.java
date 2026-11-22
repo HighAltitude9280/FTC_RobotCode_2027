@@ -8,6 +8,7 @@ import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DrivetrainCommands;
+import org.firstinspires.ftc.teamcode.commands.feeder.FeederCommands;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
@@ -20,6 +21,8 @@ public class BeedrilProfile implements ControlProfile {
     private final Command resetYawCommand;
     private final Command intakeIn;
     private final Command intakeOut;
+    private final Command feedIn;
+    private final Command feedOut;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -44,6 +47,10 @@ public class BeedrilProfile implements ControlProfile {
         intakeIn = IntakeCommands.intakeIn(robot.intake);
 
         intakeOut = IntakeCommands.intakeOut(robot.intake);
+
+        feedIn = FeederCommands.feedIn(robot.feeder);
+
+        feedOut = FeederCommands.feedOut(robot.feeder);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -75,7 +82,6 @@ public class BeedrilProfile implements ControlProfile {
     public void update() {
         updateChassisOp();
         updateSubsystemsOp();
-
     }
 
     @Override
@@ -84,8 +90,9 @@ public class BeedrilProfile implements ControlProfile {
         cancelIfScheduled(resetYawCommand);
         cancelIfScheduled(intakeIn);
         cancelIfScheduled(intakeOut);
+        cancelIfScheduled(feedIn);
+        cancelIfScheduled(feedOut);
         cancelIfScheduled(shooterCommand);
-
     }
 
     private void updateChassisOp() {
@@ -94,7 +101,6 @@ public class BeedrilProfile implements ControlProfile {
         if(currentOptions && !previousOptions) {
             resetYawCommand.schedule();
         }
-
         previousOptions = currentOptions;
     }
 
@@ -108,6 +114,17 @@ public class BeedrilProfile implements ControlProfile {
         } else {
             cancelIfScheduled(intakeIn);
             cancelIfScheduled(intakeOut);
+        }
+
+        if(subsystemsOp.x) {
+            cancelIfScheduled((feedOut));
+            scheduleIfNeeded(feedIn);
+        } else if(subsystemsOp.b) {
+            cancelIfScheduled(feedIn);
+            scheduleIfNeeded(feedOut);
+        } else {
+            cancelIfScheduled(feedIn);
+            cancelIfScheduled(feedOut);
         }
 
         if(subsystemsOp.a) {

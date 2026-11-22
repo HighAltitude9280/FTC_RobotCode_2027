@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.hardware.drivetrain.MecanumDrivetrainIO;
 import org.firstinspires.ftc.teamcode.hardware.rollers.MotorRollerIO;
 import org.firstinspires.ftc.teamcode.hardware.shooter.MotorShooterIO;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
+import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
@@ -14,6 +15,8 @@ public class RobotContainer {
 
     public final Drivetrain drivetrain;
     public final Intake intake;
+    public final Feeder feeder;
+
     public final Shooter shooter;
 
     public RobotContainer(HardwareMap hardwareMap) {
@@ -26,14 +29,18 @@ public class RobotContainer {
                         LowAltitudeConstants.Drivetrain.BACK_RIGHT_NAME,
                         LowAltitudeConstants.Drivetrain.IMU_NAME);
 
-        MotorRollerIO motorRollerIO =
+        MotorRollerIO intakeRollerIO =
                 new MotorRollerIO(hardwareMap, LowAltitudeConstants.Intake.MOTOR_NAME);
+
+        MotorRollerIO feederRollerIO =
+                new MotorRollerIO(hardwareMap, LowAltitudeConstants.Feeder.MOTOR_NAME);
 
         MotorShooterIO motorShooterIO =
                 new MotorShooterIO(hardwareMap, LowAltitudeConstants.Shooter.MOTOR_NAME);
 
         drivetrain = new Drivetrain(drivetrainIO);
-        intake = new Intake(motorRollerIO);
+        intake = new Intake(intakeRollerIO);
+        feeder = new Feeder(feederRollerIO);
         shooter = new Shooter(motorShooterIO);
     }
 
@@ -45,6 +52,7 @@ public class RobotContainer {
     public void stopAll() {
         drivetrain.stop();
         intake.stop();
+        feeder.stop();
         shooter.stop();
     }
 }
