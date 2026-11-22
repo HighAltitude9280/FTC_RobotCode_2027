@@ -1,21 +1,21 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
-import org.firstinspires.ftc.teamcode.hardware.rollers.RollerIO;
+import org.firstinspires.ftc.teamcode.hardware.intake.IntakeIO;
 
 public class Intake {
-    private final RollerIO io;
+    private final IntakeIO io;
 
-    public Intake(RollerIO io) {
+    public Intake(IntakeIO io) {
         this.io = io;
     }
 
     public void intakeIn() {
-        io.setRollerMotorPower(LowAltitudeConstants.Intake.IN_POWER);
+        io.setIntakeMotorPower(LowAltitudeConstants.Intake.IN_POWER);
     }
 
     public void intakeOut() {
-        io.setRollerMotorPower(LowAltitudeConstants.Intake.OUT_POWER);
+        io.setIntakeMotorPower(LowAltitudeConstants.Intake.OUT_POWER);
     }
 
     public void stop() {
