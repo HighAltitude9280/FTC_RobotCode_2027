@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.controllerProfiles;
 
 import static com.pedropathing.ivy.commands.Commands.instant;
 
-import android.telephony.SmsManager;
-
 import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.commands.composite.IntakingSequenceCommands;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DrivetrainCommands;
 import org.firstinspires.ftc.teamcode.commands.feeder.FeederCommands;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
@@ -23,6 +22,8 @@ public class BeedrilProfile implements ControlProfile {
     private final Command intakeOut;
     private final Command feedIn;
     private final Command feedOut;
+    private final Command intakingSequence;
+    private final Command outtakingSequence;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -51,6 +52,10 @@ public class BeedrilProfile implements ControlProfile {
         feedIn = FeederCommands.feedIn(robot.feeder);
 
         feedOut = FeederCommands.feedOut(robot.feeder);
+
+        intakingSequence = IntakingSequenceCommands.intakingSequence(robot.feeder, robot.intake);
+
+        outtakingSequence = IntakingSequenceCommands.outtakingSequence(robot.feeder, robot.intake);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -92,6 +97,8 @@ public class BeedrilProfile implements ControlProfile {
         cancelIfScheduled(intakeOut);
         cancelIfScheduled(feedIn);
         cancelIfScheduled(feedOut);
+        cancelIfScheduled(intakingSequence);
+        cancelIfScheduled(outtakingSequence);
         cancelIfScheduled(shooterCommand);
     }
 
@@ -106,25 +113,14 @@ public class BeedrilProfile implements ControlProfile {
 
     private void updateSubsystemsOp() {
         if(subsystemsOp.right_bumper) {
-            cancelIfScheduled(intakeIn);
-            scheduleIfNeeded(intakeOut);
-        } else if (subsystemsOp.left_bumper) {
-            cancelIfScheduled(intakeOut);
-            scheduleIfNeeded(intakeIn);
+            scheduleIfNeeded(intakingSequence);
+            cancelIfScheduled(outtakingSequence);
+        } else if(subsystemsOp.left_bumper) {
+            scheduleIfNeeded(outtakingSequence);
+            cancelIfScheduled(outtakingSequence);
         } else {
-            cancelIfScheduled(intakeIn);
-            cancelIfScheduled(intakeOut);
-        }
-
-        if(subsystemsOp.x) {
-            cancelIfScheduled((feedOut));
-            scheduleIfNeeded(feedIn);
-        } else if(subsystemsOp.b) {
-            cancelIfScheduled(feedIn);
-            scheduleIfNeeded(feedOut);
-        } else {
-            cancelIfScheduled(feedIn);
-            cancelIfScheduled(feedOut);
+            cancelIfScheduled(intakingSequence);
+            cancelIfScheduled(outtakingSequence);
         }
 
         if(subsystemsOp.a) {

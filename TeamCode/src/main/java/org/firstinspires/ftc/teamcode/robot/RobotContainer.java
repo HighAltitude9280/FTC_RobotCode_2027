@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.hardware.drivetrain.MecanumDrivetrainIO;
-import org.firstinspires.ftc.teamcode.hardware.rollers.MotorRollerIO;
+import org.firstinspires.ftc.teamcode.hardware.feeder.MotorFeederIO;
+import org.firstinspires.ftc.teamcode.hardware.intake.MotorIntakeIO;
 import org.firstinspires.ftc.teamcode.hardware.shooter.MotorShooterIO;
 import org.firstinspires.ftc.teamcode.subsystems.drivetrain.Drivetrain;
 import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
@@ -29,18 +30,18 @@ public class RobotContainer {
                         LowAltitudeConstants.Drivetrain.BACK_RIGHT_NAME,
                         LowAltitudeConstants.Drivetrain.IMU_NAME);
 
-        MotorRollerIO intakeRollerIO =
-                new MotorRollerIO(hardwareMap, LowAltitudeConstants.Intake.MOTOR_NAME);
+        MotorIntakeIO intakeIO =
+                new MotorIntakeIO(hardwareMap, LowAltitudeConstants.Intake.MOTOR_NAME);
 
-        MotorRollerIO feederRollerIO =
-                new MotorRollerIO(hardwareMap, LowAltitudeConstants.Feeder.MOTOR_NAME);
+        MotorFeederIO feederIO =
+                new MotorFeederIO(hardwareMap, LowAltitudeConstants.Feeder.MOTOR_NAME);
 
         MotorShooterIO motorShooterIO =
                 new MotorShooterIO(hardwareMap, LowAltitudeConstants.Shooter.MOTOR_NAME);
 
         drivetrain = new Drivetrain(drivetrainIO);
-        intake = new Intake(intakeRollerIO);
-        feeder = new Feeder(feederRollerIO);
+        intake = new Intake(intakeIO);
+        feeder = new Feeder(feederIO);
         shooter = new Shooter(motorShooterIO);
     }
 
