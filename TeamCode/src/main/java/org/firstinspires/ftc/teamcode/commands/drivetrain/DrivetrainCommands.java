@@ -32,11 +32,11 @@ public final class DrivetrainCommands {
             DoubleSupplier strafe,
             DoubleSupplier rotation) {
         return infinite(
-                () ->
-                        drivetrain.driveFieldCentric(
-                                forward.getAsDouble(),
-                                strafe.getAsDouble(),
-                                rotation.getAsDouble()))
+                        () ->
+                                drivetrain.driveFieldCentric(
+                                        forward.getAsDouble(),
+                                        strafe.getAsDouble(),
+                                        rotation.getAsDouble()))
                 .setEnd(endCondition -> drivetrain.stop())
                 .requiring(drivetrain);
     }

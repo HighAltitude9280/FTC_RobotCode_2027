@@ -12,18 +12,19 @@ import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
+
 public class BeedrilProfile implements ControlProfile {
     private final Gamepad chassisOp;
     private final Gamepad subsystemsOp;
 
     private final Command driveCommand;
     private final Command resetYawCommand;
-    private final Command intakeIn;
-    private final Command intakeOut;
-    private final Command feedIn;
-    private final Command feedOut;
-    private final Command intakingSequence;
-    private final Command outtakingSequence;
+    private final Command intakeInCommand;
+    private final Command intakeOutCommand;
+    private final Command feedInCommand;
+    private final Command feedOutCommand;
+    private final Command intakingSequenceCommand;
+    private final Command outtakingSequenceCommand;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -45,17 +46,17 @@ public class BeedrilProfile implements ControlProfile {
 
         resetYawCommand = instant(robot.drivetrain::resetYaw);
 
-        intakeIn = IntakeCommands.intakeIn(robot.intake);
+        intakeInCommand = IntakeCommands.intakeIn(robot.intake);
 
-        intakeOut = IntakeCommands.intakeOut(robot.intake);
+        intakeOutCommand = IntakeCommands.intakeOut(robot.intake);
 
-        feedIn = FeederCommands.feedIn(robot.feeder);
+        feedInCommand = FeederCommands.feedIn(robot.feeder);
 
-        feedOut = FeederCommands.feedOut(robot.feeder);
+        feedOutCommand = FeederCommands.feedOut(robot.feeder);
 
-        intakingSequence = IntakingSequenceCommands.intakingSequence(robot.feeder, robot.intake);
+        intakingSequenceCommand = IntakingSequenceCommands.intakingSequence(robot.feeder, robot.intake);
 
-        outtakingSequence = IntakingSequenceCommands.outtakingSequence(robot.feeder, robot.intake);
+        outtakingSequenceCommand = IntakingSequenceCommands.outtakingSequence(robot.feeder, robot.intake);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -93,37 +94,37 @@ public class BeedrilProfile implements ControlProfile {
     public void stop() {
         cancelIfScheduled(driveCommand);
         cancelIfScheduled(resetYawCommand);
-        cancelIfScheduled(intakeIn);
-        cancelIfScheduled(intakeOut);
-        cancelIfScheduled(feedIn);
-        cancelIfScheduled(feedOut);
-        cancelIfScheduled(intakingSequence);
-        cancelIfScheduled(outtakingSequence);
+        cancelIfScheduled(intakeInCommand);
+        cancelIfScheduled(intakeOutCommand);
+        cancelIfScheduled(feedInCommand);
+        cancelIfScheduled(feedOutCommand);
+        cancelIfScheduled(intakingSequenceCommand);
+        cancelIfScheduled(outtakingSequenceCommand);
         cancelIfScheduled(shooterCommand);
     }
 
     private void updateChassisOp() {
         boolean currentOptions = chassisOp.options;
 
-        if(currentOptions && !previousOptions) {
+        if (currentOptions && !previousOptions) {
             resetYawCommand.schedule();
         }
         previousOptions = currentOptions;
     }
 
     private void updateSubsystemsOp() {
-        if(subsystemsOp.right_bumper) {
-            scheduleIfNeeded(intakingSequence);
-            cancelIfScheduled(outtakingSequence);
-        } else if(subsystemsOp.left_bumper) {
-            scheduleIfNeeded(outtakingSequence);
-            cancelIfScheduled(outtakingSequence);
+        if (subsystemsOp.right_bumper) {
+            scheduleIfNeeded(intakingSequenceCommand);
+            cancelIfScheduled(outtakingSequenceCommand);
+        } else if (subsystemsOp.left_bumper) {
+            scheduleIfNeeded(outtakingSequenceCommand);
+            cancelIfScheduled(outtakingSequenceCommand);
         } else {
-            cancelIfScheduled(intakingSequence);
-            cancelIfScheduled(outtakingSequence);
+            cancelIfScheduled(intakingSequenceCommand);
+            cancelIfScheduled(outtakingSequenceCommand);
         }
 
-        if(subsystemsOp.a) {
+        if (subsystemsOp.a) {
             scheduleIfNeeded(shooterCommand);
         } else {
             cancelIfScheduled(shooterCommand);

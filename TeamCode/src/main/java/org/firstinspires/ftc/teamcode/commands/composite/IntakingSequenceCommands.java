@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.subsystems.feeder.Feeder;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 
 public class IntakingSequenceCommands {
-    private IntakingSequenceCommands(){}
+    private IntakingSequenceCommands() {}
 
     public static Command intakingSequence(Feeder feeder, Intake intake) {
         return parallel(

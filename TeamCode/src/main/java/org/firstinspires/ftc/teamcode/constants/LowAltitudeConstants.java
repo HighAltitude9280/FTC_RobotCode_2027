@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode.constants;
 
 import com.bylazar.configurables.annotations.Configurable;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.teamcode.hardware.kicker.ServoKickerIO;
 
 public final class LowAltitudeConstants {
     public static final class Drivetrain {
@@ -68,5 +71,14 @@ public final class LowAltitudeConstants {
         public static double kF = 12.0;
 
         private Shooter() {}
+    }
+
+    public static final class Kicker {
+        public static final String SERVO_NAME = "kicker";
+        public static final CRServo.Direction DIRECTION = CRServo.Direction.FORWARD;
+        public static final double IN_POWER = 0.5;
+        public static final double OUT_POWER = -0.5;
+
+        private Kicker() {}
     }
 }

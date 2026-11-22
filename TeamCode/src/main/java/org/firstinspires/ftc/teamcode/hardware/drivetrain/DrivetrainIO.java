@@ -4,7 +4,7 @@ public interface DrivetrainIO {
 
     void updateInputs(DrivetrainIOInputs inputs);
 
-    void setMotorPowers(double frontLeft, double frontRight, double backLeft, double backRight);
+    void setMotorPowers(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower);
 
     void resetYaw();
 
