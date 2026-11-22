@@ -86,17 +86,17 @@ public class SubsystemTest extends LinearOpMode {
 
         telemetry.addData(
                 "Drive Forward",
-                profile.getChassisDriverForward()
+                profile.getDriverForward()
         );
 
         telemetry.addData(
                 "Drive Strafe",
-                profile.getChassisDriverStrafe()
+                profile.getDriverStrafe()
         );
 
         telemetry.addData(
                 "Drive Turn",
-                profile.getChassisDriverTurn()
+                profile.getDriverTurn()
         );
 
         telemetry.update();

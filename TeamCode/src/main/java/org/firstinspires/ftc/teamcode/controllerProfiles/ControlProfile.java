@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.controllerProfiles;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
 public interface ControlProfile {
-    double getChassisDriverStrafe();
-    double getChassisDriverForward();
-    double getChassisDriverTurn();
+    double getDriverStrafe();
+    double getDriverForward();
+    double getDriverTurn();
     void start();
     void update();
     void stop();
