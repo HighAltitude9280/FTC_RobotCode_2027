@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.commands.composite.IntakingSequenceCommand
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DrivetrainCommands;
 import org.firstinspires.ftc.teamcode.commands.feeder.FeederCommands;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
+import org.firstinspires.ftc.teamcode.commands.kicker.KickerCommands;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
@@ -25,6 +26,8 @@ public class BeedrilProfile implements ControlProfile {
     private final Command feedOutCommand;
     private final Command intakingSequenceCommand;
     private final Command outtakingSequenceCommand;
+    private final Command kickerInCommand;
+    private final Command kickerOutCommand;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -57,6 +60,9 @@ public class BeedrilProfile implements ControlProfile {
         intakingSequenceCommand = IntakingSequenceCommands.intakingSequence(robot.feeder, robot.intake);
 
         outtakingSequenceCommand = IntakingSequenceCommands.outtakingSequence(robot.feeder, robot.intake);
+
+        kickerInCommand = KickerCommands.kickIn(robot.kicker);
+        kickerOutCommand = KickerCommands.kickOut(robot.kicker);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -118,7 +124,7 @@ public class BeedrilProfile implements ControlProfile {
             cancelIfScheduled(outtakingSequenceCommand);
         } else if (subsystemsOp.left_bumper) {
             scheduleIfNeeded(outtakingSequenceCommand);
-            cancelIfScheduled(outtakingSequenceCommand);
+            cancelIfScheduled(intakingSequenceCommand);
         } else {
             cancelIfScheduled(intakingSequenceCommand);
             cancelIfScheduled(outtakingSequenceCommand);
@@ -128,6 +134,14 @@ public class BeedrilProfile implements ControlProfile {
             scheduleIfNeeded(shooterCommand);
         } else {
             cancelIfScheduled(shooterCommand);
+        }
+
+        if(subsystemsOp.b) {
+            scheduleIfNeeded(kickerInCommand);
+            cancelIfScheduled(kickerOutCommand);
+        } else {
+            cancelIfScheduled(kickerInCommand);
+            cancelIfScheduled(kickerOutCommand);
         }
     }
 

@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.controllerProfiles;
 
 import static com.pedropathing.ivy.commands.Commands.instant;
 
-import android.telephony.SmsManager;
-
 import com.pedropathing.ivy.Command;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -11,10 +9,12 @@ import org.firstinspires.ftc.teamcode.commands.drivetrain.DrivetrainCommands;
 import org.firstinspires.ftc.teamcode.commands.feeder.FeederCommands;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
-import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
 public class TestProfile implements ControlProfile {
+    private static final double SHOOTER_RPM_STEP = 500.0;
+    private static final double SHOOTER_MAX_RPM = 3000.0;
+
     private final Gamepad mainOp;
     private final Gamepad sideOp;
 
@@ -27,6 +27,9 @@ public class TestProfile implements ControlProfile {
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
+    private boolean previousDpadUp = false;
+    private boolean previousDpadDown = false;
+    private double selectedShooterRPM = 0.0;
 
     public TestProfile(
             Gamepad gamepad1,
@@ -55,7 +58,7 @@ public class TestProfile implements ControlProfile {
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
-                LowAltitudeConstants.Shooter.TARGET_RPM
+                () -> selectedShooterRPM
         );
     }
 
@@ -76,6 +79,9 @@ public class TestProfile implements ControlProfile {
 
     @Override
     public void start() {
+        selectedShooterRPM = 0.0;
+        previousDpadUp = mainOp.dpad_up;
+        previousDpadDown = mainOp.dpad_down;
         driveCommand.schedule();
     }
 
@@ -126,11 +132,34 @@ public class TestProfile implements ControlProfile {
             cancelIfScheduled(feedOutCommand);
         }
 
-        if (mainOp.a) {
+        updateShooterRPM();
+    }
+
+    private void updateShooterRPM() {
+        boolean currentDpadUp = mainOp.dpad_up;
+        boolean currentDpadDown = mainOp.dpad_down;
+
+        // Ignore opposing inputs; holding either button never repeats a step.
+        if (currentDpadUp && !previousDpadUp && !currentDpadDown) {
+            selectedShooterRPM = selectedShooterRPM >= SHOOTER_MAX_RPM
+                    ? 0.0 : selectedShooterRPM + SHOOTER_RPM_STEP;
+        } else if (currentDpadDown && !previousDpadDown && !currentDpadUp) {
+            selectedShooterRPM = selectedShooterRPM <= 0.0
+                    ? SHOOTER_MAX_RPM : selectedShooterRPM - SHOOTER_RPM_STEP;
+        }
+
+        previousDpadUp = currentDpadUp;
+        previousDpadDown = currentDpadDown;
+
+        if (selectedShooterRPM > 0.0) {
             scheduleIfNeeded(shooterCommand);
         } else {
             cancelIfScheduled(shooterCommand);
         }
+    }
+
+    public double getSelectedShooterRPM() {
+        return selectedShooterRPM;
     }
 
     private void updateSideOp() {

@@ -4,8 +4,7 @@ import com.pedropathing.ivy.Scheduler;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.controllerProfiles.BeedrilProfile;
-import org.firstinspires.ftc.teamcode.controllerProfiles.ControlProfile;
+import org.firstinspires.ftc.teamcode.controllerProfiles.TestProfile;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
 @TeleOp(name = "Subsystem Test")
@@ -18,10 +17,11 @@ public class SubsystemTest extends LinearOpMode {
 
         RobotContainer robot = new RobotContainer(hardwareMap);
 
-        ControlProfile profile =
-                new BeedrilProfile(gamepad1, gamepad2, robot);
+        TestProfile profile =
+                new TestProfile(gamepad1, gamepad2, robot);
 
         try {
+            telemetry.addLine("Gamepad 1: D-pad up/down cycles shooter RPM by 500 (0-3000).");
             telemetry.update();
 
             waitForStart();
@@ -51,7 +51,7 @@ public class SubsystemTest extends LinearOpMode {
 
     private void updateTelemetry(
             RobotContainer robot,
-            ControlProfile profile
+            TestProfile profile
     ) {
         telemetry.addData(
                 "Heading Radians",
@@ -64,6 +64,11 @@ public class SubsystemTest extends LinearOpMode {
         );
 
         // SHOOTER
+        telemetry.addLine("Gamepad 1: D-pad up/down = +/-500 RPM (wraps 0-3000)");
+        telemetry.addData(
+                "Shooter Selected RPM (D-pad)",
+                profile.getSelectedShooterRPM()
+        );
         telemetry.addData(
                 "Shooter Target RPM",
                 robot.shooter.getTargetRPM()

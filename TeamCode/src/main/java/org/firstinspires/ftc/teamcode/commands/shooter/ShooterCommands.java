@@ -5,6 +5,8 @@ import com.pedropathing.ivy.Command;
 import org.firstinspires.ftc.teamcode.constants.LowAltitudeConstants;
 import org.firstinspires.ftc.teamcode.subsystems.shooter.Shooter;
 
+import java.util.function.DoubleSupplier;
+
 public class ShooterCommands {
     private ShooterCommands() {}
 
@@ -18,6 +20,13 @@ public class ShooterCommands {
     public static Command tuneVelocity(Shooter shooter) {
         return Command.build()
                 .setExecute(() -> shooter.setTargetRPM(LowAltitudeConstants.Shooter.TARGET_RPM))
+                .setEnd(endCondition -> shooter.stop())
+                .requiring(shooter);
+    }
+
+    public static Command runAtRPM(Shooter shooter, DoubleSupplier targetRPM) {
+        return Command.build()
+                .setExecute(() -> shooter.setTargetRPM(targetRPM.getAsDouble()))
                 .setEnd(endCondition -> shooter.stop())
                 .requiring(shooter);
     }
