@@ -26,6 +26,7 @@ public class TestProfile implements ControlProfile {
     private final Command feedInCommand;
     private final Command feedOutCommand;
     private final Command kickerInCommand;
+    private final Command kickerOutCommand;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -59,6 +60,7 @@ public class TestProfile implements ControlProfile {
         feedOutCommand = FeederCommands.feedOut(robot.feeder);
 
         kickerInCommand = KickerCommands.kickIn(robot.kicker);
+        kickerOutCommand = KickerCommands.kickOut(robot.kicker);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -104,6 +106,7 @@ public class TestProfile implements ControlProfile {
         cancelIfScheduled(feedInCommand);
         cancelIfScheduled(feedOutCommand);
         cancelIfScheduled(kickerInCommand);
+        cancelIfScheduled(kickerOutCommand);
         cancelIfScheduled(shooterCommand);
     }
 
@@ -138,9 +141,14 @@ public class TestProfile implements ControlProfile {
         }
 
         if (mainOp.b) {
+            cancelIfScheduled(kickerOutCommand);
             scheduleIfNeeded(kickerInCommand);
+        } else if (mainOp.a) {
+            cancelIfScheduled(kickerInCommand);
+            scheduleIfNeeded(kickerOutCommand);
         } else {
             cancelIfScheduled(kickerInCommand);
+            cancelIfScheduled(kickerOutCommand);
         }
 
         updateShooterRPM();

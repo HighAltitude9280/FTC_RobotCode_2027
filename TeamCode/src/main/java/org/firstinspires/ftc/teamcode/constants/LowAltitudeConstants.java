@@ -31,8 +31,8 @@ public final class LowAltitudeConstants {
 
     public static final class Intake {
         public static final String MOTOR_NAME = "intake";
-        public static final double IN_POWER = 0.5;
-        public static final double OUT_POWER = -0.5;
+        public static final double IN_POWER = 0.6;
+        public static final double OUT_POWER = -0.6;
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
                 DcMotor.ZeroPowerBehavior.BRAKE;
         public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
@@ -43,8 +43,8 @@ public final class LowAltitudeConstants {
 
     public static final class Feeder {
         public static final String MOTOR_NAME = "feeder";
-        public static final double IN_POWER = 0.1;
-        public static final double OUT_POWER = -0.1;
+        public static final double IN_POWER = 0.9;
+        public static final double OUT_POWER = -0.9;
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
                 DcMotor.ZeroPowerBehavior.BRAKE;
         public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_WITHOUT_ENCODER;
@@ -76,8 +76,8 @@ public final class LowAltitudeConstants {
     public static final class Kicker {
         public static final String SERVO_NAME = "kicker";
         public static final CRServo.Direction DIRECTION = CRServo.Direction.FORWARD;
-        public static final double IN_POWER = 0.5;
-        public static final double OUT_POWER = -0.5;
+        public static final double IN_POWER = 0.75;
+        public static final double OUT_POWER = -0.75;
 
         private Kicker() {}
     }
