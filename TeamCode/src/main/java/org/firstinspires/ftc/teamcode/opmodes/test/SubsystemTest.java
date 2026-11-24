@@ -22,6 +22,7 @@ public class SubsystemTest extends LinearOpMode {
 
         try {
             telemetry.addLine("Gamepad 1: D-pad up/down cycles shooter RPM by 500 (0-3000).");
+            telemetry.addLine("Gamepad 1: hold B = kicker; X/Y = feeder in/out.");
             telemetry.update();
 
             waitForStart();
@@ -65,6 +66,7 @@ public class SubsystemTest extends LinearOpMode {
 
         // SHOOTER
         telemetry.addLine("Gamepad 1: D-pad up/down = +/-500 RPM (wraps 0-3000)");
+        telemetry.addLine("Gamepad 1: hold B = kicker; X/Y = feeder in/out.");
         telemetry.addData(
                 "Shooter Selected RPM (D-pad)",
                 profile.getSelectedShooterRPM()

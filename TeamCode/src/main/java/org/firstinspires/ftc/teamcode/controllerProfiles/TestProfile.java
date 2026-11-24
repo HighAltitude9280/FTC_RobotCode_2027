@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.commands.drivetrain.DrivetrainCommands;
 import org.firstinspires.ftc.teamcode.commands.feeder.FeederCommands;
 import org.firstinspires.ftc.teamcode.commands.intake.IntakeCommands;
+import org.firstinspires.ftc.teamcode.commands.kicker.KickerCommands;
 import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
@@ -24,6 +25,7 @@ public class TestProfile implements ControlProfile {
     private final Command intakeOutCommand;
     private final Command feedInCommand;
     private final Command feedOutCommand;
+    private final Command kickerInCommand;
     private final Command shooterCommand;
 
     private boolean previousOptions = false;
@@ -55,6 +57,8 @@ public class TestProfile implements ControlProfile {
         feedInCommand = FeederCommands.feedIn(robot.feeder);
 
         feedOutCommand = FeederCommands.feedOut(robot.feeder);
+
+        kickerInCommand = KickerCommands.kickIn(robot.kicker);
 
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
@@ -99,6 +103,7 @@ public class TestProfile implements ControlProfile {
         cancelIfScheduled(intakeOutCommand);
         cancelIfScheduled(feedInCommand);
         cancelIfScheduled(feedOutCommand);
+        cancelIfScheduled(kickerInCommand);
         cancelIfScheduled(shooterCommand);
     }
 
@@ -124,12 +129,18 @@ public class TestProfile implements ControlProfile {
         if (mainOp.x) {
             cancelIfScheduled((feedOutCommand));
             scheduleIfNeeded(feedInCommand);
-        } else if (mainOp.b) {
+        } else if (mainOp.y) {
             cancelIfScheduled(feedInCommand);
             scheduleIfNeeded(feedOutCommand);
         } else {
             cancelIfScheduled(feedInCommand);
             cancelIfScheduled(feedOutCommand);
+        }
+
+        if (mainOp.b) {
+            scheduleIfNeeded(kickerInCommand);
+        } else {
+            cancelIfScheduled(kickerInCommand);
         }
 
         updateShooterRPM();
