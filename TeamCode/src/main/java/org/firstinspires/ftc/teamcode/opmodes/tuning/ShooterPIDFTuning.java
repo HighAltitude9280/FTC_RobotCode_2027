@@ -25,7 +25,10 @@ public class ShooterPIDFTuning extends LinearOpMode {
 
         Shooter shooter = new Shooter(shooterIO);
 
-        Command shooterTuningCommand = ShooterCommands.tuneVelocity(shooter);
+        Command shooterTuningCommand = ShooterCommands.runAtRPM(
+                shooter,
+                () -> LowAltitudeConstants.Shooter.TARGET_RPM
+        );
 
         TelemetryManager panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
@@ -34,48 +37,50 @@ public class ShooterPIDFTuning extends LinearOpMode {
         telemetry.addLine("B: detener el shooter.");
         telemetry.update();
 
-        waitForStart();
+        try {
+            waitForStart();
 
-        while (opModeIsActive()) {
-            if (gamepad1.a && !shooterTuningCommand.isScheduled()) {
-                shooterTuningCommand.schedule();
+            while (opModeIsActive()) {
+                if (gamepad1.a && !shooterTuningCommand.isScheduled()) {
+                    shooterTuningCommand.schedule();
+                }
+
+                if (gamepad1.b && shooterTuningCommand.isScheduled()) {
+                    shooterTuningCommand.cancel();
+                }
+
+                Scheduler.execute();
+
+                shooter.periodic();
+
+                panelsTelemetry.addData("Shooter Enabled", shooterTuningCommand.isScheduled());
+
+                panelsTelemetry.addData("Shooter Target RPM", shooter.getTargetRPM());
+
+                panelsTelemetry.addData("Shooter Current RPM", shooter.getCurrentRPM());
+
+                panelsTelemetry.addData("Shooter RPM Error", shooter.getRPMError());
+
+                panelsTelemetry.addData("Shooter Ready", shooter.isAtTargetRPM());
+
+                panelsTelemetry.addData("Shooter P", LowAltitudeConstants.Shooter.kP);
+
+                panelsTelemetry.addData("Shooter I", LowAltitudeConstants.Shooter.kI);
+
+                panelsTelemetry.addData("Shooter D", LowAltitudeConstants.Shooter.kD);
+
+                panelsTelemetry.addData("Shooter F", LowAltitudeConstants.Shooter.kF);
+
+                panelsTelemetry.update(telemetry);
             }
-
-            if (gamepad1.b && shooterTuningCommand.isScheduled()) {
+        } finally {
+            if (shooterTuningCommand.isScheduled()) {
                 shooterTuningCommand.cancel();
             }
 
-            Scheduler.execute();
+            shooter.stop();
 
-            shooter.periodic();
-
-            panelsTelemetry.addData("Shooter Enabled", shooterTuningCommand.isScheduled());
-
-            panelsTelemetry.addData("Shooter Target RPM", shooter.getTargetRPM());
-
-            panelsTelemetry.addData("Shooter Current RPM", shooter.getCurrentRPM());
-
-            panelsTelemetry.addData("Shooter RPM Error", shooter.getRPMError());
-
-            panelsTelemetry.addData("Shooter Ready", shooter.isAtTargetRPM());
-
-            panelsTelemetry.addData("Shooter P", LowAltitudeConstants.Shooter.kP);
-
-            panelsTelemetry.addData("Shooter I", LowAltitudeConstants.Shooter.kI);
-
-            panelsTelemetry.addData("Shooter D", LowAltitudeConstants.Shooter.kD);
-
-            panelsTelemetry.addData("Shooter F", LowAltitudeConstants.Shooter.kF);
-
-            panelsTelemetry.update(telemetry);
+            Scheduler.reset();
         }
-
-        if (shooterTuningCommand.isScheduled()) {
-            shooterTuningCommand.cancel();
-        }
-
-        shooter.stop();
-
-        Scheduler.reset();
     }
 }

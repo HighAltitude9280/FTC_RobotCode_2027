@@ -56,7 +56,7 @@ public final class LowAltitudeConstants {
     @Configurable
     public static final class Shooter {
         public static final String MOTOR_NAME = "shooter";
-        public static final double TARGET_RPM = 4000.0;
+        public static final double TARGET_RPM = 2400.0;
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
                 DcMotor.ZeroPowerBehavior.BRAKE;
         public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_USING_ENCODER;

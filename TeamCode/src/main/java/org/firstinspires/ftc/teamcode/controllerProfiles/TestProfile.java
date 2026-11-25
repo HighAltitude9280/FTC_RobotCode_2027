@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.commands.shooter.ShooterCommands;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
 public class TestProfile implements ControlProfile {
-    private static final double SHOOTER_RPM_STEP = 500.0;
+    private static final double SHOOTER_RPM_STEP = 100.0;
     private static final double SHOOTER_MAX_RPM = 3000.0;
 
     private final Gamepad mainOp;
@@ -32,7 +32,7 @@ public class TestProfile implements ControlProfile {
     private boolean previousOptions = false;
     private boolean previousDpadUp = false;
     private boolean previousDpadDown = false;
-    private double selectedShooterRPM = 0.0;
+    private double selectedShooterRPM = 2000.0;
 
     public TestProfile(
             Gamepad gamepad1,
@@ -85,7 +85,7 @@ public class TestProfile implements ControlProfile {
 
     @Override
     public void start() {
-        selectedShooterRPM = 0.0;
+        selectedShooterRPM = 2000.0;
         previousDpadUp = mainOp.dpad_up;
         previousDpadDown = mainOp.dpad_down;
         driveCommand.schedule();
