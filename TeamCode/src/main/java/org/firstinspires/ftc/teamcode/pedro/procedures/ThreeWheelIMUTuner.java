@@ -19,8 +19,8 @@ import java.util.List;
 public class ThreeWheelIMUTuner extends Procedure {
 
     private static String leftEncoderName = "lf";
-    private static String rightEncoderName = "rr";
-    private static String strafeEncoderName = "lr";
+    private static String rightEncoderName = "feeder";
+    private static String strafeEncoderName = "rr";
     private static String frontLeftName = "lf";
     private static String backLeftName = "lr";
     private static String frontRightName = "rf";

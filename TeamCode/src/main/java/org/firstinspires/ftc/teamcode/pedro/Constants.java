@@ -11,8 +11,10 @@ import com.pedropathing.revhub.drivetrains.MecanumConfig;
 import com.pedropathing.revhub.localizers.Encoder;
 import com.pedropathing.revhub.localizers.PinpointLocalizer;
 import com.pedropathing.revhub.localizers.RevHubIMU;
+import com.pedropathing.revhub.localizers.ThreeWheelConfig;
 import com.pedropathing.revhub.localizers.ThreeWheelIMUConfig;
 import com.pedropathing.revhub.localizers.ThreeWheelIMULocalizer;
+import com.pedropathing.revhub.localizers.ThreeWheelLocalizer;
 import com.pedropathing.tuning.autotune.Procedure;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -23,7 +25,7 @@ import org.firstinspires.ftc.teamcode.pedro.procedures.MecanumTuner;
 public class Constants {
     public static Follower create(HardwareMap h) {
         return new Follower(
-                new ThreeWheelIMULocalizer(h, localizerConfig),
+                new ThreeWheelLocalizer(h, localizerConfig),
                 new Mecanum(h, drivetrainConfig),
                 new Foresight(foresightConfig)
         );
@@ -34,31 +36,26 @@ public class Constants {
     }
 
     public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
-        c.frontLeftName.set("frontLeft");
-        c.frontRightName.set("frontRight");
-        c.backLeftName.set("backLeft");
-        c.backRightName.set("backRight");
+        c.frontLeftName.set("lf");
+        c.frontRightName.set("rf");
+        c.backLeftName.set("lr");
+        c.backRightName.set("rr");
         c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
         c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
         c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
         c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
     });
 
-    public static ThreeWheelIMUConfig localizerConfig = new ThreeWheelIMUConfig(c -> {
-        c.leftEncoderName.set("frontLeft");
+    public static ThreeWheelConfig localizerConfig = new ThreeWheelConfig(c -> {
+        c.leftEncoderName.set("lf");
         c.rightEncoderName.set("feeder");
-        c.strafeEncoderName.set("backRight");
-        c.imuName.set("imu");
-        c.imu.set(new RevHubIMU(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
-                RevHubOrientationOnRobot.UsbFacingDirection.UP
-        )));
-        c.leftPodY.set(6.518994581817288);
-        c.rightPodY.set(-6.973882342321854);
-        c.strafePodX.set(-1.1263028054181723);
-        c.forwardTicksToInches.set(0.0020043086207700974);
-        c.strafeTicksToInches.set(0.005555135192123587);
-        c.turnTicksToRadians.set(0.001958696163420593);
+        c.strafeEncoderName.set("rr");
+        c.leftPodY.set(6.491639262733671);
+        c.rightPodY.set(-7.478694477294898);
+        c.strafePodX.set(-6.6201980650766474E-15);
+        c.forwardTicksToInches.set(0.0020005970391955225);
+        c.strafeTicksToInches.set(0.001993603854300785);
+        c.turnTicksToRadians.set(0.004668308019557671);
         c.leftEncoderDirection.set(Encoder.FORWARD);
         c.rightEncoderDirection.set(Encoder.REVERSE);
         c.strafeEncoderDirection.set(Encoder.REVERSE);
@@ -77,7 +74,7 @@ public class Constants {
                 c.coast.set(Controller.proportionalFeedforward(0.012106832418647831));
                 c.brake.set(Controller.proportionalFeedforward(0.010290807555850656));
 
-                c.headingFeedback.set(Controller.proportional(5.616210429942214));
+                c.headingFeedback.set(Controller.proportional(2.816210429942214));
                 c.headingBrakeCoefficients.set(Vector2D.cartesian(0.10704826758082685, 5.666789716817385E-4));
 
                 c.linearBrakeCoefficients.set(Matrix.diag(0.09966852906966608, 0.04806025795528229));

@@ -18,11 +18,16 @@ import java.util.List;
 public class ThreeWheelTuner extends Procedure {
 
     private static String leftEncoderName = "lf";
-    private static String rightEncoderName = "rf";
+    private static String rightEncoderName = "feeder";
     private static String strafeEncoderName = "rr";
 
     public ThreeWheelTuner() {
         super("Three Wheel Tuner", "Tune three odometry pods");
+    }
+
+    // CAMBIO: para que ThreeWheelResolution pueda leer el encoder de strafe directamente
+    static String strafeName() {
+        return strafeEncoderName;
     }
 
     @Override
@@ -32,12 +37,15 @@ public class ThreeWheelTuner extends Procedure {
                         "Encoder Setup",
                         "Set the motor ports that the three odometry encoders are plugged into.");
         Inputs.Field<String> leftEncoder = setup.s("Left Encoder Motor Name").withDefault("lf");
-        Inputs.Field<String> rightEncoder = setup.s("Right Encoder Motor Name").withDefault("rr");
-        Inputs.Field<String> strafeEncoder = setup.s("Strafe Encoder Motor Name").withDefault("lr");
+        Inputs.Field<String> rightEncoder = setup.s("Right Encoder Motor Name").withDefault("feeder");
+        Inputs.Field<String> strafeEncoder = setup.s("Strafe Encoder Motor Name").withDefault("rr");
         awaitInputs(setup);
-        leftEncoderName = leftEncoder.get();
-        rightEncoderName = rightEncoder.get();
-        strafeEncoderName = strafeEncoder.get();
+
+        // CAMBIO: nombres forzados. Se ignora lo que llegue de la pantalla
+        // (Panels puede recordar valores viejos como "lr").
+        leftEncoderName = "lf";
+        rightEncoderName = "feeder";
+        strafeEncoderName = "rr";
 
         Inputs resolution =
                 inputs(
@@ -170,10 +178,17 @@ public class ThreeWheelTuner extends Procedure {
     private List<Double> measure(String pod, double distance) throws InterruptedException {
         List<Double> measured = runOpMode(new ThreeWheelResolution(pod, distance));
         if (measured == null) {
+            // CAMBIO: el mensaje de error muestra qué nombres de encoder se usaron
             abort(
                     pod
-                            + " stage ended without a nonzero measurement. Check the displayed"
-                            + " ticks, complete the push, then press Stop.");
+                            + " stage ended without a nonzero measurement. Encoders usados: left="
+                            + leftEncoderName
+                            + ", right="
+                            + rightEncoderName
+                            + ", strafe="
+                            + strafeEncoderName
+                            + " | Lectura: "
+                            + ThreeWheelResolution.lastDebug);
             return null;
         }
         return measured;
@@ -226,6 +241,8 @@ public class ThreeWheelTuner extends Procedure {
 
 class ThreeWheelResolution extends TuningOpMode<List<Double>> {
 
+    static String lastDebug = "";  // CAMBIO
+
     String pod;
     double distance;
 
@@ -256,16 +273,35 @@ class ThreeWheelResolution extends TuningOpMode<List<Double>> {
         localizer.setPose(new Pose(0, 0));
         Pose position = null;
 
+        // CAMBIO: también leemos el encoder de strafe directo (ticks crudos)
+        DcMotorEx strafeMotor = hardwareMap.get(DcMotorEx.class, ThreeWheelTuner.strafeName());
+        int strafeStart = strafeMotor.getCurrentPosition();
+        int strafeTicks = 0;
+        int loops = 0;
+
         waitForStart();
         while (!isStopRequested()) {
             localizer.update();
             position = localizer.pose();
+            strafeTicks = strafeMotor.getCurrentPosition() - strafeStart;
+            loops++;
         }
 
-        if (position == null) {
-            return null;
+        // CAMBIO: guardamos lo que se leyó para mostrarlo si hay error
+        lastDebug = "loops=" + loops
+                + ", strafeTicks=" + strafeTicks
+                + (position == null ? ", pose=null" : ", x=" + position.x() + ", y=" + position.y());
+
+        double movement;
+        if (pod.equals("Strafe")) {
+            // CAMBIO: si el localizer da y = 0, usamos los ticks crudos del encoder de strafe
+            movement = (position != null && position.y() != 0.0) ? position.y() : strafeTicks;
+        } else {
+            if (position == null) {
+                return null;
+            }
+            movement = position.x();
         }
-        double movement = pod.equals("Strafe") ? position.y() : position.x();
         if (movement == 0.0) {
             return null;
         }
@@ -293,7 +329,7 @@ class ThreeWheelOffsets extends TuningOpMode<List<Double>> {
         super(
                 (left ? "Left" : "Right") + " Pod Offset Identification",
                 "After Start, rotate exactly 180 degrees counterclockwise about the robot center."
-                    + " Keep that center fixed. Stop moving, press Stop to save this measurement.",
+                        + " Keep that center fixed. Stop moving, press Stop to save this measurement.",
                 true);
         this.left = left;
         this.forward = forward;
