@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.commands.autos.paths.red;
 
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.api.Paths;
