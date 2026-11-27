@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode;
 
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.api.Paths;
@@ -18,17 +18,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "AutoPath", group = "Autonomous")
-public class estesiesblue extends LinearOpMode {
+@Autonomous(name = "Red Far", group = "Autonomous")
+public class RedFar extends LinearOpMode {
 
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose start = poseFactory.of(85, 133, 90);
-    private final Pose point1 = poseFactory.of(115, 133, 270);
-    private final Pose point2 = poseFactory.of(115, 40, 270);
-    private final Pose point3 = poseFactory.of(134, 40, 180);
+    private final Pose start = poseFactory.of(60, 9, 90);
+    private final Pose point1 = poseFactory.of(25, 9, 90);
+    private final Pose point2 = poseFactory.of(25, 100, 90);
+    private final Pose point3 = poseFactory.of(5, 100, 90);
 
     // Autonomous routine
     public Command autoRoutine() {
@@ -75,6 +75,6 @@ public class estesiesblue extends LinearOpMode {
     }
 
     public Path path3() {
-        return Paths.line(point2, point3).reverseTangent();
+        return Paths.line(point2, point3).constant(point3);
     }
 }

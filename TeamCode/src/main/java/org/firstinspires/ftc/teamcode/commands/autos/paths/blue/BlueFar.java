@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
-
-import static com.pedropathing.api.Paths.*;
+package org.firstinspires.ftc.teamcode.commands.autos.paths.blue;
 import com.pedropathing.api.Paths;
 
 import com.pedropathing.api.PoseFactory;
@@ -10,7 +8,6 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
-import static com.pedropathing.ivy.commands.Commands.*;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,20 +15,24 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "parkBlueTest", group = "Autonomous")
-public class autoParkBlue extends LinearOpMode {
+@Autonomous(name = "Blue Far", group = "Autonomous")
+public class BlueFar extends LinearOpMode {
 
     private Follower follower;
 
-    private final PoseFactory poseFactory = PoseFactory.degrees();
+    private final PoseFactory poseFactory = PoseFactory.degrees().mirrorX(70.75);
 
-    private final Pose start = poseFactory.of(133, 71.5065, 180);
-    private final Pose point1 = poseFactory.of(133, 28, 180);
+    private final Pose start = poseFactory.of(82, 133, 270);
+    private final Pose point1 = poseFactory.of(115, 133, 270);
+    private final Pose point2 = poseFactory.of(115, 40, 270);
+    private final Pose point3 = poseFactory.of(135, 40, 270);
 
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
-                follow(follower, path1())
+                follow(follower, path1()),
+                follow(follower, path2()),
+                follow(follower, path3())
         );
     }
 
@@ -63,6 +64,14 @@ public class autoParkBlue extends LinearOpMode {
     }
 
     public Path path1() {
-        return Paths.line(start, point1).linear(start, point1);
+        return Paths.line(start, point1).constant(point1);
+    }
+
+    public Path path2() {
+        return Paths.line(point1, point2).reverseTangent();
+    }
+
+    public Path path3() {
+        return Paths.line(point2, point3).reverseTangent();
     }
 }

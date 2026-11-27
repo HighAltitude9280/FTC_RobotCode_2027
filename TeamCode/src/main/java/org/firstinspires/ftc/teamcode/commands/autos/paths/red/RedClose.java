@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
+package org.firstinspires.ftc.teamcode.commands.autos.paths.red;
 
 import static com.pedropathing.api.Paths.*;
 import com.pedropathing.api.Paths;
@@ -18,24 +18,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "autoParkTest", group = "Autonomous")
-public class autoParkTest extends LinearOpMode {
+@Autonomous(name = "RedClose", group = "Autonomous")
+public class RedClose extends LinearOpMode {
 
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose start = poseFactory.of(56, 8, 90);
-    private final Pose point1 = poseFactory.of(24, 8, 90);
-    private final Pose point2 = poseFactory.of(24, 98, 90);
-    private final Pose point3 = poseFactory.of(8, 98, 90);
+    private final Pose start = poseFactory.of(62, 133, 90);
+    private final Pose point1 = poseFactory.of(62, 110, 270);
+    private final Pose point2 = poseFactory.of(10, 110, 270);
 
     // Autonomous routine
     public Command autoRoutine() {
         return sequential(
                 follow(follower, path1()),
-                follow(follower, path2()),
-                follow(follower, path3())
+                follow(follower, path2())
         );
     }
 
@@ -72,9 +70,5 @@ public class autoParkTest extends LinearOpMode {
 
     public Path path2() {
         return Paths.line(point1, point2).constant(point2);
-    }
-
-    public Path path3() {
-        return Paths.line(point2, point3).constant(point3);
     }
 }

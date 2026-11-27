@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.autos;
-
-import static com.pedropathing.api.Paths.*;
+package org.firstinspires.ftc.teamcode.commands.autos.paths.blue;
 import com.pedropathing.api.Paths;
 
 import com.pedropathing.api.PoseFactory;
@@ -10,7 +8,6 @@ import com.pedropathing.paths.Path;
 import com.pedropathing.ivy.Command;
 import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
-import static com.pedropathing.ivy.commands.Commands.*;
 import static com.pedropathing.ivy.groups.Groups.sequential;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,16 +15,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "autoTupuCraft", group = "Autonomous")
-public class autoTupuCraft extends LinearOpMode {
+@Autonomous(name = "Blue Close", group = "Autonomous")
+public class BlueClose extends LinearOpMode {
 
     private Follower follower;
 
     private final PoseFactory poseFactory = PoseFactory.degrees();
 
-    private final Pose start = poseFactory.of(60, 133.2212, 270);
-    private final Pose point1 = poseFactory.of(60, 110, 270);
-    private final Pose point2 = poseFactory.of(12, 110, 270);
+    private final Pose start = poseFactory.of(82, 8, 90);
+    private final Pose point1 = poseFactory.of(82, 30, 90);
+    private final Pose point2 = poseFactory.of(135, 30, 90);
 
     // Autonomous routine
     public Command autoRoutine() {
