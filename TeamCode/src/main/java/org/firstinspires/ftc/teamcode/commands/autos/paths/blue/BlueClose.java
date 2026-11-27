@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "Blue Close", group = "Autonomous")
 public class BlueClose extends LinearOpMode {
 
     private Follower follower;

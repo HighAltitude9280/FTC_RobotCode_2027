@@ -18,7 +18,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "Red Far", group = "Autonomous")
 public class RedFar extends LinearOpMode {
 
     private Follower follower;

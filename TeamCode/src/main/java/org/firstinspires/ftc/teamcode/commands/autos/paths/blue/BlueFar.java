@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 
-@Autonomous(name = "Blue Far", group = "Autonomous")
 public class BlueFar extends LinearOpMode {
 
     private Follower follower;
