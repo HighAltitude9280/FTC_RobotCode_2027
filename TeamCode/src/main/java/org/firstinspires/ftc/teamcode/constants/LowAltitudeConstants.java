@@ -57,13 +57,14 @@ public final class LowAltitudeConstants {
     public static final class Shooter {
         public static final String MOTOR_NAME = "shooter";
         public static final double TARGET_RPM = 2400.0;
+        public static final double INTAKING_TARGET_RPM = 1500.0;
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =
                 DcMotor.ZeroPowerBehavior.BRAKE;
         public static final DcMotor.RunMode RUN_MODE = DcMotor.RunMode.RUN_USING_ENCODER;
         public static final DcMotorSimple.Direction DIRECTION = DcMotorSimple.Direction.FORWARD;
         public static final double TICKS_PER_REV = 28.0;
 
-        public static final double RPM_TOLERANCE = 75.0;
+        public static final double RPM_TOLERANCE = 150.0;
 
         public static double kP = 30.0;
         public static double kI = 0.0;

@@ -50,7 +50,9 @@ public class BeedrillStateProfile implements ControlProfile {
         resetYawCommand = instant(robot.drivetrain::resetYaw);
         shooterCommand = ShooterCommands.runAtRPM(
                 robot.shooter,
-                LowAltitudeConstants.Shooter.TARGET_RPM
+                () -> matchState == MatchState.INTAKING
+                        ? LowAltitudeConstants.Shooter.INTAKING_TARGET_RPM
+                        : LowAltitudeConstants.Shooter.TARGET_RPM
         );
         intakingSequence = IntakingSequenceCommands.intakingSequence(
                 robot.feeder,
@@ -147,7 +149,7 @@ public class BeedrillStateProfile implements ControlProfile {
     }
 
     private void updateShooter() {
-        if (matchState == MatchState.SHOOTING) {
+        if (matchState == MatchState.INTAKING || matchState == MatchState.SHOOTING) {
             scheduleIfNeeded(shooterCommand);
         } else {
             cancelIfScheduled(shooterCommand);
@@ -175,7 +177,7 @@ public class BeedrillStateProfile implements ControlProfile {
         if (matchState == MatchState.INTAKING) {
             return intakingSequence;
         }
-        if (matchState == MatchState.SHOOTING && subsystemsOp.right_trigger_pressed) {
+        if (matchState == MatchState.SHOOTING) {
             return feedWhenReadyCommand;
         }
         if (matchState == MatchState.IDLE && subsystemsOp.right_bumper) {

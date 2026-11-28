@@ -28,13 +28,12 @@ public class ShootingSequenceCommands {
                     boolean shooterReady = shooter.getTargetRPM() > 0.0
                             && shooter.isAtTargetRPM();
 
+                    intake.intakeIn();
+                    feeder.feedIn();
+
                     if (shooterReady) {
-                        intake.intakeIn();
-                        feeder.feedIn();
                         kicker.kickIn();
                     } else {
-                        intake.stop();
-                        feeder.stop();
                         kicker.stop();
                     }
                 })
