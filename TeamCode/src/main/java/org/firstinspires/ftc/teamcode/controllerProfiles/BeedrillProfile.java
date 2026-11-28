@@ -42,7 +42,12 @@ public class BeedrillProfile implements ControlProfile{
         outtakingSequence = IntakingSequenceCommands.outtakingSequence(robot.feeder, robot.intake, robot.kicker);
         kickIn = KickerCommands.kickIn(robot.kicker);
 
-        shootingSequence = ShootingSequenceCommands.shootingSequence(robot.feeder, robot.intake, robot.shooter);
+        shootingSequence = ShootingSequenceCommands.shootingSequence(
+                robot.feeder,
+                robot.intake,
+                robot.shooter,
+                robot.kicker
+        );
 
     }
 

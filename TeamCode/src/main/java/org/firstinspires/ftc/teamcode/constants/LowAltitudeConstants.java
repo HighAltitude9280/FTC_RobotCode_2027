@@ -10,10 +10,10 @@ import org.firstinspires.ftc.teamcode.hardware.kicker.ServoKickerIO;
 public final class LowAltitudeConstants {
     public static final class Drivetrain {
 
-        public static final String FRONT_LEFT_NAME = "frontLeft";
-        public static final String FRONT_RIGHT_NAME = "frontRight";
-        public static final String BACK_LEFT_NAME = "backLeft";
-        public static final String BACK_RIGHT_NAME = "backRight";
+        public static final String FRONT_LEFT_NAME = "lf";
+        public static final String FRONT_RIGHT_NAME = "rf";
+        public static final String BACK_LEFT_NAME = "lr";
+        public static final String BACK_RIGHT_NAME = "rr";
         public static final String IMU_NAME = "imu";
 
         public static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR =

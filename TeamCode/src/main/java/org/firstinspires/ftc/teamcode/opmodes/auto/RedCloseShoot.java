@@ -15,7 +15,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.commands.composite.ShootingSequenceCommands;
-import org.firstinspires.ftc.teamcode.commands.kicker.KickerCommands;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import org.firstinspires.ftc.teamcode.robot.RobotContainer;
 
@@ -36,8 +35,12 @@ public class RedCloseShoot extends LinearOpMode {
 
         Command shoot = deadline(
                 waitMs(10_000),
-                ShootingSequenceCommands.shootingSequence(robot.feeder, robot.intake, robot.shooter),
-                KickerCommands.kickInWhenAtTargetRPM(robot.kicker, robot.shooter)
+                ShootingSequenceCommands.shootingSequence(
+                        robot.feeder,
+                        robot.intake,
+                        robot.shooter,
+                        robot.kicker
+                )
         );
         Command redClosePath = sequential(
                 follow(follower, Paths.line(start, point1).constant(point1)),
